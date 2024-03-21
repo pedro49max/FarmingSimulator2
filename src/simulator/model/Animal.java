@@ -7,99 +7,144 @@ import simulator.misc.Utils;
 import simulator.misc.Vector2D;
 
 public abstract class Animal implements Entity, Animalnfo{
-	protected String genetic_code;
-	protected Diet diet;
-	protected State state;
-	protected Vector2D pos;
-	protected Vector2D dest;
-	protected double energy;
-	protected double speed;
-	protected double age;
-	protected double desire;
-	protected double sight_range;
-	protected Animal mate_target;
-	protected Animal baby;
-	protected AnimalMapView region_mngr;
-	protected SelectionStrategy mate_strategy;
+	protected String _genetic_code;
+	protected Diet _diet;
+	protected State _state;
+	protected Vector2D _pos;
+	protected Vector2D _dest;
+	protected double _energy;
+	protected double _speed;
+	protected double _age;
+	protected double _desire;
+	protected double _sight_range;
+	protected Animal _mate_target;
+	protected Animal _baby;
+	protected AnimalMapView _region_mngr;
+	protected SelectionStrategy _mate_strategy;
 	
-	protected Animal(String genetic_code, Diet diet, double sight_range, double init_speed, SelectionStrategy mate_strategy, Vector2D pos) {
-		this.genetic_code = genetic_code;//needs to thrown exception for wrong values
-		this.diet = diet;
-		this.sight_range = sight_range;
-		this.speed = Utils.get_randomized_parameter(init_speed, 0.1);
-		this.mate_strategy = mate_strategy;
-		this.pos = pos;
-		this.state = State.NORMAL;
-		this.energy = 100.0;
-		this.desire = 0.0;
-		this.dest = null;
-		this.mate_target = null;
-		this.baby = null;
-		this.region_mngr = null;
-		if(this.diet == Diet.CARNIVORE)
-			this.age = Utils._rand.nextDouble(13);//Random number when initialize the program
+	protected Animal(String _genetic_code, Diet _diet, double _sight_range, double init__speed, SelectionStrategy _mate_strategy, Vector2D _pos) {
+		this._genetic_code = _genetic_code;//needs to thrown exception for wrong values
+		this._diet = _diet;
+		this._sight_range = _sight_range;
+		this._speed = Utils.get_randomized_parameter(init__speed, 0.1);
+		this._mate_strategy = _mate_strategy;
+		this._pos = _pos;
+		this._state = _state.NORMAL;
+		this._energy = 100.0;
+		this._desire = 0.0;
+		this._dest = null;
+		this._mate_target = null;
+		this._baby = null;
+		this._region_mngr = null;
+		if(this._diet == _diet.CARNIVORE)
+			this._age = Utils._rand.nextDouble(13);//Random number when initialize the program
 		else
-			this.age = Utils._rand.nextDouble(7);//Random number when initialize the program
+			this._age = Utils._rand.nextDouble(7);//Random number when initialize the program
 	}
 	
 	protected Animal(Animal p1, Animal p2) {
-		this.genetic_code = p1.get_genetic_code();
-		this.diet = p1.get_diet();
-		this.sight_range = Utils.get_randomized_parameter((p1.get_sight_range()+p2.get_sight_range())/2, 0.2);
-		this.speed = Utils.get_randomized_parameter((p1.get_speed()+p2.get_speed())/2, 0.2);
-		this.mate_strategy = p2.mate_strategy;
-		this.pos = p1.get_position().plus(Vector2D.get_random_vector(-1,1).scale(60.0*(Utils._rand.nextGaussian()+1)));
-		while(pos.getX() >= Main.width || pos.getY() >= Main.width) {
-			this.pos = p1.get_position().plus(Vector2D.get_random_vector(-1,1).scale(60.0*(Utils._rand.nextGaussian()+1)));
-			//System.out.println("baby animal out of the map");
+		this._genetic_code = p1.get_genetic_code();
+		this._diet = p1.get_diet();
+		this._sight_range = Utils.get_randomized_parameter((p1.get_sight_range()+p2.get_sight_range())/2, 0.2);
+		this._speed = Utils.get_randomized_parameter((p1.get_speed()+p2.get_speed())/2, 0.2);
+		this._mate_strategy = p2._mate_strategy;
+		this._pos = p1.get_position().plus(Vector2D.get_random_vector(-1,1).scale(60.0*(Utils._rand.nextGaussian()+1)));
+		while(_pos.getX() >= Main.width || _pos.getY() >= Main.width) {
+			this._pos = p1.get_position().plus(Vector2D.get_random_vector(-1,1).scale(60.0*(Utils._rand.nextGaussian()+1)));
+			//System.out.println("_baby animal out of the map");
 		}
-		this.state = State.NORMAL;
-		this.energy = (p1.get_energy() + p2.get_energy())/2;
-		this.desire = 0.0;
-		this.dest = null;
-		this.mate_target = null;
-		this.baby = null;
-		this.region_mngr = null;
-		this.age = 0.0;
+		this._state = _state.NORMAL;
+		this._energy = (p1.get_energy() + p2.get_energy())/2;
+		this._desire = 0.0;
+		this._dest = null;
+		this._mate_target = null;
+		this._baby = null;
+		this._region_mngr = null;
+		this._age = 0.0;
 	}
 	void init(AnimalMapView reg_mngr) {
-		this.region_mngr = reg_mngr;
-		if(pos == null)
-			pos = Vector2D.get_random_vectorXY(0, region_mngr.get_width()-1, 0, region_mngr.get_height()-1);
+		this._region_mngr = reg_mngr;
+		if(_pos == null)
+			_pos = Vector2D.get_random_vectorXY(0, _region_mngr.get_width()-1, 0, _region_mngr.get_height()-1);
 		else {}
-			//Adjusting pos
-		dest = Vector2D.get_random_vectorXY(0, region_mngr.get_width()-1, 0, region_mngr.get_height()-1);
+			//Adjusting _pos
+		_dest = Vector2D.get_random_vectorXY(0, _region_mngr.get_width()-1, 0, _region_mngr.get_height()-1);
 		
 	}
 	Animal deliver_baby() {
-		Animal babyx;
-		if(this.diet == Diet.CARNIVORE)
-			babyx = new Wolf(this.baby.mate_strategy, this.baby.getSecondStrategy(), this.baby.get_position());
+		Animal _babyx;
+		if(this._diet == _diet.CARNIVORE)
+			_babyx = new Wolf(this._baby._mate_strategy, this._baby.getSecondStrategy(), this._baby.get_position());
 		else
-			babyx = new Sheep(this.baby.mate_strategy, this.baby.getSecondStrategy(), this.baby.get_position());
-		this.baby = null;
-		return babyx;
+			_babyx = new Sheep(this._baby._mate_strategy, this._baby.getSecondStrategy(), this._baby.get_position());
+		this._baby = null;
+		return _babyx;
 	}
-	protected void move(double speed) {
-		this.pos = this.pos.plus(this.dest.minus(this.pos).direction().scale(speed));
+	protected void move(double _speed) {
+		this._pos = this._pos.plus(this._dest.minus(this._pos).direction().scale(_speed));
 	}
 	public JSONObject as_JSON() {
 		JSONObject json = new JSONObject();
         
-        // Add position
-        json.put("pos", new double[]{this.pos.getX(), this.pos.getY()});
+        // Add _position
+        json.put("_pos", new double[]{this._pos.getX(), this._pos.getY()});
         
         // Add genetic code
-        json.put("gcode", this.genetic_code);
+        json.put("gcode", this._genetic_code);
         
-        // Add diet
-        String diet = this.diet == Diet.CARNIVORE ? "CARNIVORE" : "HERBIVORE";
-        json.put("diet", diet);
+        // Add _diet
+        String _diet = this._diet == Diet.CARNIVORE ? "CARNIVORE" : "HERBIVORE";
+        json.put("_diet", _diet);
         
-        // Add state
-        json.put("state", this.state.toString());
+        // Add _state
+        json.put("_state", this._state.toString());
         
         return json;
 	}
+	
+	@Override
+	public State get_state() {
+		return this._state;
+	}
+	@Override
+	public Vector2D get_position() {
+		return this._pos;
+	}
+	@Override
+	public String get_genetic_code() {
+		return this._genetic_code;
+	}
+	@Override
+	public Diet get_diet() {
+		return this._diet;
+	}
+	@Override
+	public double get_speed() {
+		return this._speed;
+	}
+	@Override
+	public double get_sight_range() {
+		return this._sight_range;
+	}
+	@Override
+	public double get_energy() {
+		return this._energy;
+	}
+	@Override
+	public double get_age() {
+		return this._age;
+	}
+	@Override
+	public Vector2D get_destination() {
+		return this._dest;
+	}
+	@Override
+	public boolean is_pregnant() {
+		boolean pregnant = true;
+		if(this._baby == null)
+			pregnant = false;
+		return pregnant;
+	}
+	
 	abstract SelectionStrategy getSecondStrategy();
 }

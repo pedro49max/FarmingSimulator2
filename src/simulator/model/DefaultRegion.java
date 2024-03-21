@@ -7,7 +7,7 @@ public class DefaultRegion extends Region{
 			int n = 0;
 			for(int i = 0; i < animals.size();i++) {
 				Animal animal = animals.get(i);
-				if(animal.diet == Diet.HERBIVORE)
+				if(animal._diet == Diet.HERBIVORE)
 					n++;
 			}				
 			food = 60.0*Math.exp(-Math.max(0,n - 5.0)*2.0)*dt;
