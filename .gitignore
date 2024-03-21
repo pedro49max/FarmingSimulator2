@@ -1,0 +1,6 @@
+/simulator/
+.project
+.class
+.classpath
+.metadata
+bin/
