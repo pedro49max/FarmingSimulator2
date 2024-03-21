@@ -1,0 +1,25 @@
+The project is a substantial one, involving the development of a GUI for an ecosystem simulator following the Model-View-Controller (MVC) pattern. Given its complexity and the range of skills required, splitting the work among three group members in a balanced way is crucial. I'll distribute the tasks based on three main components of the project: Model & Controller changes, GUI development, and additional features & integration.
+
+PEDRO: Model and Controller Enhancements
+Model Changes: Implement the new methods in the Simulator class (reset, toString for region classes), and modify the Region and RegionManager classes to adapt to the MVC pattern. This includes adding iterator functionality to the RegionManager class and adjusting the RegionInfo interface.
+Controller Changes: Extend the Controller class to support new functionalities such as resetting the simulation, setting regions, advancing the simulation, and managing observers.
+Observer Interface: Develop the EcoSysObserver interface and integrate observer notifications into the Simulator class, ensuring the GUI can respond to simulation state changes.
+
+
+OMKAR: Core GUI Components
+Main Window & Control Panel: Design and implement the MainWindow and ControlPanel classes, incorporating all the required components such as buttons, spinners, and text fields for user interaction.
+State Bar & Dialogs: Develop the StatusBar class to display simulation information and implement the ChangeRegionsDialog for region property adjustments.
+Information Tables: Create the InfoTable class along with SpeciesTableModel and RegionsTableModel to display the state of animal species and regions, respectively.
+
+
+ARTURO: Visualization and Integration
+Map Viewer: Implement the MapWindow and MapViewer classes for graphical representation of the simulation state. This task requires a good understanding of graphical programming in Java.
+GUI-Model Integration: Ensure the GUI components properly interact with the model through the controller, implementing the required listeners and event handlers. This includes handling file inputs for simulation configurations and triggering simulation updates.
+Additional Features: Implement the start_GUI_mode method in the Main class and handle command-line arguments for launching the simulator in different modes. Also, manage the inclusion of external resources like icons and map viewers.
+
+
+Coordination and Final Integration
+Regular Meetings: The team should hold regular meetings to ensure integration points between the GUI, Model, and Controller components are well understood and effectively implemented.
+Code Review: Before final integration, conduct code reviews to ensure consistency in coding standards and to identify any potential integration issues.
+Final Testing: Perform comprehensive testing of the simulator to identify and fix bugs, and to ensure the application meets all requirements.
+This distribution ensures each team member has a distinct area of responsibility while promoting collaboration on integration and testing. Balancing the workload in this way leverages individual strengths and fosters a collective approach to problem-solving and development.
