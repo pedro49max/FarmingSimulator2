@@ -25,6 +25,11 @@ public class Simulator implements JSONable, Observable<EcoSysObserver>{
 		this._region_mngr = new RegionManager(cols, rows, width, height);
 		this._animals = new ArrayList<>();
 		this._time = 0.0;
+		//Notify all observers
+		List<AnimalInfo> animals = new ArrayList<>(_animals);
+		for (EcoSysObserver observer : _observers) {
+			observer.onReset(this._time, this._region_mngr, animals);
+		}
 	}
 	private void set_region(int row, int col, Region r) {
 		this._region_mngr.set_region(row, col, r);
@@ -32,10 +37,20 @@ public class Simulator implements JSONable, Observable<EcoSysObserver>{
 	public void set_region(int row, int col, JSONObject r_json) {
 		Region r = this._regions_factory.create_instance(r_json); // Create a region from the JSON representation
         set_region(row, col, r); // Call the private method to set the region.
+        //Notify all observers
+    	for (EcoSysObserver observer : _observers) {
+      		observer.onRegionSet(row, col, this._region_mngr, r);
+      	}
 	}
 	private void add_animal(Animal a) {
 		this._animals.add(a);
 		this._region_mngr.register_animal(a);
+		//Notify all observers
+		AnimalInfo animal = a;
+		List<AnimalInfo> animals = new ArrayList<>(_animals);
+		for (EcoSysObserver observer : _observers) {
+			observer.onAnimalAdded(this._time, this._region_mngr, animals, animal);
+		}
 	}
 	public void add_animal(JSONObject a_json){
 		Animal animal = _animals_factory.create_instance(a_json); // Create an animal from the JSON representation
@@ -75,6 +90,10 @@ public class Simulator implements JSONable, Observable<EcoSysObserver>{
 				this.add_animal(baby);
 			}						
 		}
+		List<AnimalInfo> animals = new ArrayList<>(_animals);
+		for (EcoSysObserver observer : _observers) {
+			observer.onAvanced(this._time, this._region_mngr, animals, dt);
+		}
 	}
 	@Override
 	public JSONObject as_JSON() {
@@ -91,6 +110,8 @@ public class Simulator implements JSONable, Observable<EcoSysObserver>{
     public void addObserver(EcoSysObserver o) {
         if (!_observers.contains(o)) {
             _observers.add(o);
+            // Notify the observer upon registration
+            o.onRegister(_time, _region_mngr, new ArrayList<>(_animals));
         }
     }
 	 @Override
