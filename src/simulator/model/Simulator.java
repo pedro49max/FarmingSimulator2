@@ -6,63 +6,63 @@ import org.json.JSONObject;
 import simulator.factories.Factory;
 
 public class Simulator implements JSONable{
-	private Factory<Animal> animals_factory;
-	private Factory<Region> regions_factory;
-	private RegionManager region_mngr;
-	private List<Animal> animals;
-	private double time;
+	private Factory<Animal> _animals_factory;
+	private Factory<Region> _regions_factory;
+	private RegionManager _region_mngr;
+	private List<Animal> _animals;
+	private double _time;
 	
 	public Simulator(int cols, int rows, int width, int height,Factory<Animal> animals_factory, Factory<Region> regions_factory) {
-		this.animals_factory = animals_factory;
-		this.regions_factory = regions_factory;
-		this.region_mngr = new RegionManager(cols, rows, width, height);
-		this.animals = new ArrayList<>();
-		this.time = 0.0;
+		this._animals_factory = animals_factory;
+		this._regions_factory = regions_factory;
+		this._region_mngr = new RegionManager(cols, rows, width, height);
+		this._animals = new ArrayList<>();
+		this._time = 0.0;
 		
 	}
 	private void set_region(int row, int col, Region r) {
-		this.region_mngr.set_region(row, col, r);
+		this._region_mngr.set_region(row, col, r);
 	}
 	public void set_region(int row, int col, JSONObject r_json) {
-		Region r = this.regions_factory.create_instance(r_json); // Create a region from the JSON representation
+		Region r = this._regions_factory.create_instance(r_json); // Create a region from the JSON representation
         set_region(row, col, r); // Call the private method to set the region.
 	}
 	private void add_animal(Animal a) {
-		this.animals.add(a);
-		this.region_mngr.register_animal(a);
+		this._animals.add(a);
+		this._region_mngr.register_animal(a);
 	}
 	public void add_animal(JSONObject a_json){
-		Animal animal = animals_factory.create_instance(a_json); // Create an animal from the JSON representation
+		Animal animal = _animals_factory.create_instance(a_json); // Create an animal from the JSON representation
         add_animal(animal); // Call the private method to add the animal to the simulation
     }
 	
 	public MapInfo get_map_info() {
-		return this.region_mngr;
+		return this._region_mngr;
 	}
 	public List<? extends Animalnfo> get_animals(){
-		final List<Animal> copy = this.animals;
+		final List<Animal> copy = this._animals;
 		return copy;
 	}
 	public double get_time() {
 		return this.time;
 	}
 	public void advance(double dt) {
-		this.time += dt;
-		for(int i = 0; i < this.animals.size(); i++) {
-			Animal animal = animals.get(i);
+		this._time += dt;
+		for(int i = 0; i < this._animals.size(); i++) {
+			Animal animal = _animals.get(i);
 			if(animal.get_state() == State.DEAD) {
-				this.animals.remove(animal);
-				this.region_mngr.unregister_animal(animal);
+				this._animals.remove(animal);
+				this._region_mngr.unregister_animal(animal);
 				i--;
 			}
 			else {
 				animal.update(dt);
-				this.region_mngr.update_animal_region(animal);
+				this._region_mngr.update_animal_region(animal);
 			}			
 		}
-		this.region_mngr.update_all_regions(dt);
-		for(int i = 0; i < this.animals.size(); i++) {
-			Animal animal = animals.get(i);
+		this._region_mngr.update_all_regions(dt);
+		for(int i = 0; i < this._animals.size(); i++) {
+			Animal animal = _animals.get(i);
 			Animal baby;
 			if(animal.is_pregnant()) {
 				baby = animal.deliver_baby();
@@ -74,10 +74,10 @@ public class Simulator implements JSONable{
 	public JSONObject as_JSON() {
 		 JSONObject json = new JSONObject();
 	        // Add current time
-	        json.put("time", time);
+	        json.put("time", _time);
 
 	        // Add state of the region manager
-	        json.put("state", region_mngr.as_JSON());
+	        json.put("state", _region_mngr.as_JSON());
 
 	        return json;
 	}
