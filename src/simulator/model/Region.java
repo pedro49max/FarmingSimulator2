@@ -6,36 +6,37 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 
 public abstract class Region implements Entity, FoodSupplier, RegionInfo{
-	protected List<Animal> animals;
+	protected List<Animal> _animals;
 	
 	public Region() {
-		animals = new ArrayList<>();
+		_animals = new ArrayList<>();
 	}
 	final void add_animal(Animal a) {
-		animals.add(a);
+		_animals.add(a);
 	}
 	final void remove_animal(Animal a) {
 		int i = 0;
 		boolean found = false;
-		while(!found && i < animals.size()) {
-			if(animals.get(i).equals(a))
+		while(!found && i < _animals.size()) {
+			if(_animals.get(i).equals(a))
 				found = true;
 			else
 				i++;
 		}
-		animals.remove(a);
+		_animals.remove(a);
 	}
 	final List<Animal> getAnimals(){
 		final List<Animal> animalss;
-		animalss = animals;
+		animalss = _animals;
 		return animalss;
 	}
+	public abstract String toString();
 	public JSONObject as_JSON() {//returns a JSON structure as follows where ai is what is returned by as_JSON() of the corresponding animal:
 		JSONObject json = new JSONObject();
         JSONArray animalArray = new JSONArray();
 
         // Add animals to the JSON array
-        for (Animal animal : animals) {
+        for (Animal animal : _animals) {
             animalArray.put(animal.as_JSON());
         }
 
