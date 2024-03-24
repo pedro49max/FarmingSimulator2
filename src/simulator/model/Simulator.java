@@ -44,7 +44,7 @@ public class Simulator implements JSONable{
 		return copy;
 	}
 	public double get_time() {
-		return this.time;
+		return this._time;
 	}
 	public void advance(double dt) {
 		this._time += dt;
