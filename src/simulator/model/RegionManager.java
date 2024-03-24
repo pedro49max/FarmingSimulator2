@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import simulator.misc.Vector2D;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class RegionManager implements AnimalMapView{
 	private int mapWidth;
@@ -139,14 +140,6 @@ public class RegionManager implements AnimalMapView{
 			for(int c = left; c <= right; c++) {
 				Region reg = this.regions[r][c];
 				animals.addAll(reg.getAnimals().stream().filter(filter).collect(Collectors.toList()));
-				//List<Animal> regAnimals = regions[r][c].getAnimals();
-	            //System.out.println(regAnimals.size());
-				//for(int i = 0; i < regAnimals.size();i++) {
-					//Animal regAnimal = regAnimals.get(i);
-					//if(a.pos.distanceTo(regAnimal.pos) <= a.get_sight_range() ) {
-						//animals.add(regAnimal);
-					//}
-				//}
 			}
 		return animals;
 	}
@@ -194,4 +187,31 @@ public class RegionManager implements AnimalMapView{
 	public int get_region_height() {
 		return this.regHeight;
 	}
+
+    public Iterator<RegionData> iterator() {
+        return new RegionIterator();
+    }
+    
+ // Implementing the custom iterator
+    private class RegionIterator implements Iterator<RegionData> {
+        private int currentRow = 0;
+        private int currentCol = 0;
+
+        @Override
+        public boolean hasNext() {
+            return currentRow < regions.length && currentCol < regions[currentRow].length;
+        }
+
+        @Override
+        public RegionData next() {
+            RegionData data = new RegionData(currentRow, currentCol, regions[currentRow][currentCol]);
+            // Move to the next position
+            currentCol++;
+            if (currentCol >= regions[currentRow].length) {
+                currentRow++;
+                currentCol = 0;
+            }
+            return data;
+        }
+    }
 }

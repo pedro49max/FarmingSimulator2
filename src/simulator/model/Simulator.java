@@ -44,7 +44,7 @@ public class Simulator implements JSONable{
 	public MapInfo get_map_info() {
 		return this._region_mngr;
 	}
-	public List<? extends Animalnfo> get_animals(){
+	public List<? extends AnimalInfo> get_animals(){
 		final List<Animal> copy = this._animals;
 		return copy;
 	}
