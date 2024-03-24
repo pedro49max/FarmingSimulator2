@@ -5,11 +5,12 @@ import java.util.List;
 import org.json.JSONObject;
 import simulator.factories.Factory;
 
-public class Simulator implements JSONable{
+public class Simulator implements JSONable, Observable<EcoSysObserver>{
 	private Factory<Animal> _animals_factory;
 	private Factory<Region> _regions_factory;
 	private RegionManager _region_mngr;
 	private List<Animal> _animals;
+	private List<EcoSysObserver> _observers;
 	private double _time;
 	
 	public Simulator(int cols, int rows, int width, int height,Factory<Animal> animals_factory, Factory<Region> regions_factory) {
@@ -18,7 +19,7 @@ public class Simulator implements JSONable{
 		this._region_mngr = new RegionManager(cols, rows, width, height);
 		this._animals = new ArrayList<>();
 		this._time = 0.0;
-		
+		_observers = new ArrayList<>();
 	}
 	public void reset(int cols, int rows, int width, int height) {
 		this._region_mngr = new RegionManager(cols, rows, width, height);
@@ -86,6 +87,16 @@ public class Simulator implements JSONable{
 
 	        return json;
 	}
+	@Override
+    public void addObserver(EcoSysObserver o) {
+        if (!_observers.contains(o)) {
+            _observers.add(o);
+        }
+    }
+	 @Override
+	    public void removeObserver(EcoSysObserver o) {
+	        _observers.remove(o);
+	    }
 	/*Notice that there are two versions of the add_animal and set_region methods, one receives the input
 in JSON format while the other receives the corresponding objects once they have been created. The ones
 that receive the objects are private. The purpose of having the 2 versions is to facilitate development and
