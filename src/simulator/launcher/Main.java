@@ -59,15 +59,15 @@ public class Main {
 
 	// some attributes to stores values corresponding to command-line parameters
 	//
-	private static Double _deltaTime = null;
+	public static Double _deltaTime = null;
 	private static Double _time = null;
 	private static String _in_file = null;
 	private static String _out_file = null;
 	private static boolean _simple_view = false;
 	private static ExecMode _mode = ExecMode.BATCH;
-	private static Factory<Animal> animals_factory;
-	private static Factory<Region> regions_factory;
-	private static Factory<SelectionStrategy> strategyFactory;
+	public static Factory<Animal> animals_factory;
+	public static Factory<Region> regions_factory;
+	public static Factory<SelectionStrategy> strategyFactory;
 
 	private static void parse_args(String[] args) {
 
