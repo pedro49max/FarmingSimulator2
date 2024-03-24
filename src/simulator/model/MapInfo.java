@@ -8,5 +8,8 @@ public interface MapInfo extends JSONable, Iterable<MapInfo.RegionData>{
 	public int get_region_width();
 	public int get_region_height();
 	public record RegionData(int row, int col, RegionInfo r) {
+		public Object getR() {
+			return r;
+		}
 	}
 }
