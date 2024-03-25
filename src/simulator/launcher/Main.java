@@ -1,5 +1,7 @@
 package simulator.launcher;
 
+import javax.swing.*;
+import simulator.model.GUI.*;
 import java.io.File;
 import java.util.*;
 import java.io.FileInputStream;
@@ -288,6 +290,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		Utils._rand.setSeed(2147483647l);
+		//JFrame frame = new MainWindow(null);
 		try {
 			start(args);
 		} catch (Exception e) {
