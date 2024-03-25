@@ -7,5 +7,5 @@ public interface EcoSysObserver {
 	void onReset(double time, MapInfo map, List<AnimalInfo> animals);
 	void onAnimalAdded(double time, MapInfo map, List<AnimalInfo> animals,AnimalInfo a);
 	void onRegionSet(int row, int col, MapInfo map, RegionInfo r);
-	void onAvanced(double time, MapInfo map, List<AnimalInfo> animals, double dt);
+	void onAdvanced(double time, MapInfo map, List<AnimalInfo> animals, double dt);
 }

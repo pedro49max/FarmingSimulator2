@@ -92,7 +92,7 @@ public class Simulator implements JSONable, Observable<EcoSysObserver>{
 		}
 		List<AnimalInfo> animals = new ArrayList<>(_animals);
 		for (EcoSysObserver observer : _observers) {
-			observer.onAvanced(this._time, this._region_mngr, animals, dt);
+			observer.onAdvanced(this._time, this._region_mngr, animals, dt);
 		}
 	}
 	@Override

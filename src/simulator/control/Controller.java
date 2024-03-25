@@ -21,6 +21,7 @@ public class Controller {
 	public Controller(Simulator sim) {
 		this._sim = sim;
 	}
+	
 	public void load_data(JSONObject data) {
 		// Check if regions are present
         this.set_regions(data);

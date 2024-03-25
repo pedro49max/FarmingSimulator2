@@ -1,14 +1,14 @@
 package simulator.launcher;
 
-import javax.swing.*;
-import simulator.model.GUI.*;
 import java.io.File;
-import java.util.*;
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -20,19 +20,14 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import simulator.control.Controller;
+import simulator.factories.*;
+import simulator.misc.Utils;
 import simulator.model.Animal;
 import simulator.model.Region;
 import simulator.model.SelectionStrategy;
 import simulator.model.Simulator;
-import simulator.misc.Utils;
-import simulator.control.Controller;
-import simulator.factories.Factory;
-import simulator.factories.Builder;
-import simulator.factories.SheepBuilder;
-import simulator.factories.*;
-import simulator.factories.BuilderBasedFactory;
 
-//papure
 public class Main {
 	private enum ExecMode {
 		BATCH("batch", "Batch mode"), GUI("gui", "Graphical User Interface mode");
