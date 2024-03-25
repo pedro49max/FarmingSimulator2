@@ -13,78 +13,88 @@ import simulator.model.MapInfo;
 import simulator.model.RegionInfo;
 import simulator.model.State;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 class SpeciesTableModel extends AbstractTableModel implements EcoSysObserver {
-	private Controller _ctrl;
-	private List<Animal> _speciesList;
-	private State[] _states;
+    private Controller _ctrl;
+    private Map<String, Map<State, Integer>> _speciesMap;
+    private State[] _states;
 
-	SpeciesTableModel(Controller ctrl) {
-		_ctrl = ctrl;
-		_ctrl.addObserver(this);
-		_speciesList = new ArrayList<>();
-		_states = State.values();
-		_ctrl.addObserver(this);
-	}
+    SpeciesTableModel(Controller ctrl) {
+        _ctrl = ctrl;
+        _speciesMap = new HashMap<>();
+        _states = State.values();
+        ctrl.addObserver(this);
+    }
+    
+    @Override
+    public String getColumnName(int column) {
+        String result = "";
+        
+        if (column == 0)
+        	result = "Species";
+        else if (column - 1 < _states.length)
+        	result = _states[column - 1].toString();
+       
+        return result;
+    }
 
-	@Override
-	public int getRowCount() {
-		// TODO Auto-generated method stub
-		return _speciesList.size();
-	}
+    @Override
+    public int getRowCount() {
+        return _speciesMap.size(); // Each row represents a unique genetic code
+    }
 
-	@Override
-	public int getColumnCount() {
-		// TODO Auto-generated method stub
-		return _states.length + 1;
-	}
+    @Override
+    public int getColumnCount() {
+        return _states.length + 1; // Each column represents a state
+    }
 
-	@Override
-	public Object getValueAt(int rowIndex, int columnIndex) {
-		Animal species = _speciesList.get(rowIndex);
-		if (columnIndex == 0) {
-			return species.get_genetic_code();
-		} 
-		else if (rowIndex == 0){
-			return _states[columnIndex];
-		}
-		else {
-			State state = _states[columnIndex - 1];
-			return state;
-		}
-	}
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        List<String> geneticCodes = new ArrayList<>(_speciesMap.keySet());
+        String geneticCode = geneticCodes.get(rowIndex);
 
-	@Override
-	public void onRegister(double time, MapInfo map, List<AnimalInfo> animals) {
-		updateSpeciesList(animals);
-	}
+        if (columnIndex == 0) {
+            return geneticCode;
+        } else {
+            State state = _states[columnIndex - 1];
+            return _speciesMap.getOrDefault(geneticCode, new HashMap<>()).getOrDefault(state, 0);
+        }
+    }
 
-	@Override
-	public void onReset(double time, MapInfo map, List<AnimalInfo> animals) {
-		updateSpeciesList(animals);
-	}
+    @Override
+    public void onRegister(double time, MapInfo map, List<AnimalInfo> animals) {
+        updateSpeciesMap(animals);
+    }
 
-	@Override
-	public void onAnimalAdded(double time, MapInfo map, List<AnimalInfo> animals, AnimalInfo a) {
-		updateSpeciesList(animals);
-	}
+    @Override
+    public void onReset(double time, MapInfo map, List<AnimalInfo> animals) {
+        updateSpeciesMap(animals);
+    }
 
-	@Override
-	public void onRegionSet(int row, int col, MapInfo map, RegionInfo r) {
-		// Not used in this table
-	}
+    @Override
+    public void onAnimalAdded(double time, MapInfo map, List<AnimalInfo> animals, AnimalInfo a) {
+        updateSpeciesMap(animals);
+    }
 
-	@Override
-	public void onAdvanced(double time, MapInfo map, List<AnimalInfo> animals, double dt) {
-		updateSpeciesList(animals);
-	}
+    @Override
+    public void onRegionSet(int row, int col, MapInfo map, RegionInfo r) {
+        // Not used in this table
+    }
 
-	private void updateSpeciesList(List<AnimalInfo> animals) {
-		_speciesList.clear();
-		for (AnimalInfo a : animals) {
-			_speciesList.add((Animal) a);
-		}
-		fireTableDataChanged();
-	}
+    @Override
+    public void onAdvanced(double time, MapInfo map, List<AnimalInfo> animals, double dt) {
+        updateSpeciesMap(animals);
+    }
 
+    private void updateSpeciesMap(List<AnimalInfo> animals) {
+        _speciesMap.clear();
+        for (AnimalInfo animalInfo : animals) {
+            String geneticCode = animalInfo.get_genetic_code();
+            State state = animalInfo.get_state();
+            _speciesMap.computeIfAbsent(geneticCode, k -> new HashMap<>())
+                    .merge(state, 1, Integer::sum);
+        }
+        fireTableDataChanged();
+    }
 }

@@ -48,6 +48,13 @@ public class RegionManager implements AnimalMapView{
 		}
 		regions[row][col] = newRegion;	
 	}
+	
+	public Region[][] getRegions(){
+		
+		return regions;
+	}
+	
+	
 	void register_animal(Animal a) {
 		Vector2D pos= a.get_position();
 		int newCol =  Math.max(0, Math.min(colums -1, (int) (pos.getX() / this.regWidth)));

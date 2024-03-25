@@ -27,7 +27,9 @@ import simulator.model.Animal;
 import simulator.model.Region;
 import simulator.model.SelectionStrategy;
 import simulator.model.Simulator;
+import simulator.view.MainWindow;
 
+import javax.swing.*;
 public class Main {
 	private enum ExecMode {
 		BATCH("batch", "Batch mode"), GUI("gui", "Graphical User Interface mode");
@@ -258,6 +260,8 @@ public class Main {
 	        // Create the controller instance and run the simulation
 	        Controller controller = new Controller(simulator);
 	        controller.load_data(inputJSON);
+	        JFrame frame = new MainWindow(controller);
+	        frame.setVisible(true);
 	        controller.run(_time, _deltaTime, _simple_view, os);
 	        os.close();
 	    }
@@ -285,7 +289,6 @@ public class Main {
 
 	public static void main(String[] args) {
 		Utils._rand.setSeed(2147483647l);
-		//JFrame frame = new MainWindow(null);
 		try {
 			start(args);
 		} catch (Exception e) {

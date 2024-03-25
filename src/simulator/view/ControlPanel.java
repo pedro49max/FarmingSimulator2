@@ -15,9 +15,12 @@ public class ControlPanel extends JPanel {
     private JToolBar _toolBar;
     private JFileChooser _fc;
     private boolean _stopped = true; // used in the run/stop buttons
+    private JButton _fileButton;
+    private JButton _regButton;
     private JButton _quitButton;
     private JButton _runButton;
     private JButton _stopButton;
+    private JButton _mapButton;
     private JSpinner _stepsSpinner;
     private JTextField _deltaTimeField;
 
@@ -31,34 +34,55 @@ public class ControlPanel extends JPanel {
         _toolBar = new JToolBar();
         add(_toolBar, BorderLayout.PAGE_START);
 
-        // Quit Button
-        _toolBar.add(Box.createGlue()); // this aligns the button to the right
-        _toolBar.addSeparator();
-        _quitButton = new JButton();
-        _quitButton.setToolTipText("Quit");
-        _quitButton.setIcon(new ImageIcon("resources/icons/exit.png"));
-        _quitButton.addActionListener((e) -> ViewUtils.quit(this));
-        _toolBar.add(_quitButton);
-
         // Initialize file chooser
         _fc = new JFileChooser();
         _fc.setCurrentDirectory(new File(System.getProperty("user.dir") + "/resources/examples"));
-
+        
+     // File Button
+        _toolBar.add(Box.createGlue());
+        _fileButton = new JButton();
+        _fileButton.setToolTipText("Load an input file");
+        _fileButton.setIcon(new ImageIcon("resources/icons/open.png"));
+        //_fileButton.addActionListener(this::);
+        _toolBar.add(_fileButton);
+        
+     // Map Button
+        _toolBar.add(Box.createGlue());
+        _toolBar.addSeparator();
+        _mapButton = new JButton();
+        _mapButton.setToolTipText("Map Viewer");
+        _mapButton.setIcon(new ImageIcon("resources/icons/viewer.png"));
+        //_mapButton.addActionListener(this::);
+        _toolBar.add(_mapButton);
+        
+        
+     // Regions Button
+        _toolBar.add(Box.createGlue());
+        _toolBar.addSeparator();
+        _regButton = new JButton();
+        _regButton.setToolTipText("Map Viewer");
+        _regButton.setIcon(new ImageIcon("resources/icons/regions.png"));
+        //_regButton.addActionListener(this::);
+        _toolBar.add(_regButton);
         // Initialize change regions dialog
         _changeRegionsDialog = new ChangeRegionsDialog(_ctrl);
-
+     
         // Run Button
         _toolBar.add(Box.createGlue());
         _toolBar.addSeparator();
-        _runButton = new JButton("Run");
+        _runButton = new JButton();
         _runButton.setToolTipText("Run Simulation");
+        _runButton.setIcon(new ImageIcon("resources/icons/run.png"));
         _runButton.addActionListener(this::runSimulation);
         _toolBar.add(_runButton);
-
+        
+     // Add separator
+        _toolBar.addSeparator();
         // Stop Button
-        _stopButton = new JButton("Stop");
+        _stopButton = new JButton();
         _stopButton.setToolTipText("Stop Simulation");
-        _stopButton.setEnabled(false);
+        _stopButton.setIcon(new ImageIcon("resources/icons/stop.png"));
+        _stopButton.setEnabled(true);
         _stopButton.addActionListener(this::stopSimulation);
         _toolBar.add(_stopButton);
 
@@ -76,6 +100,15 @@ public class ControlPanel extends JPanel {
 
         // Add separator
         _toolBar.addSeparator();
+        
+     // Quit Button
+        _toolBar.add(Box.createGlue()); // this aligns the button to the right
+        _toolBar.addSeparator();
+        _quitButton = new JButton();
+        _quitButton.setToolTipText("Quit");
+        _quitButton.setIcon(new ImageIcon("resources/icons/exit.png"));
+        _quitButton.addActionListener((e) -> ViewUtils.quit(this));
+        _toolBar.add(_quitButton);
     }
 
     private void runSimulation(ActionEvent e) {
