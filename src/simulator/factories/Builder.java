@@ -25,7 +25,7 @@ public abstract class Builder<T> {
 	}
 	protected void fill_in_data(JSONObject o) {
 		// Add data specific to each type of region builder
-	    switch (_type_tag) {
+	    /*switch (_type_tag) {
 	        case "default":
 	            // For default region builder, no additional data needed
 	            break;
@@ -38,7 +38,7 @@ public abstract class Builder<T> {
 	        default:
 	            // Handle unrecognized type tag
 	            throw new IllegalArgumentException("Unrecognized region builder type: " + _type_tag);
-	    }
+	    }*/
 	}
 	@Override
 	public String toString() {

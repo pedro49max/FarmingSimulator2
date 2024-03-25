@@ -50,14 +50,22 @@ public class RegionManager implements AnimalMapView{
 	}
 	void register_animal(Animal a) {
 		Vector2D pos= a.get_position();
-		getRegionAtPosition(pos).add_animal(a);
-		this.animal_region.put(a, getRegionAtPosition(pos));
+		int newCol =  Math.max(0, Math.min(colums -1, (int) (pos.getX() / this.regWidth)));
+		int newRow = Math.max(0, Math.min(rows -1, (int) (pos.getY() / this.regHeight)));
+		if(newCol >= this.colums)
+			newCol = this.colums - 1;
+		if(newRow >= this.rows)
+			newRow = this.rows - 1;
+		regions[newRow][newCol].add_animal(a);
+		this.animal_region.put(a, regions[newRow][newCol]);
 		a.init(this);
 	}
 	void unregister_animal(Animal a) {
 		Vector2D pos= a.get_position();
-		getRegionAtPosition(pos).remove_animal(a);
-		this.animal_region.remove(a, getRegionAtPosition(pos));
+		int newCol =  Math.max(0, Math.min(colums -1, (int) (pos.getX() / this.regWidth)));
+		int newRow = Math.max(0, Math.min(rows -1, (int) (pos.getY() / this.regHeight)));
+		regions[newRow][newCol].remove_animal(a);
+		this.animal_region.remove(a, regions[newRow][newCol]);
 	}
 	void unregister_animal(Animal a, Region r) {
 		r.remove_animal(a);
@@ -103,8 +111,9 @@ public class RegionManager implements AnimalMapView{
 	public double get_food(Animal a, double dt) {
 		double food;
 		Vector2D pos= a.get_position();
-
-		food = getRegionAtPosition(pos).get_food(a, dt);
+		int newCol =  Math.max(0, Math.min(colums -1, (int) (pos.getX() / this.regWidth)));
+		int newRow = Math.max(0, Math.min(rows -1, (int) (pos.getY() / this.regHeight)));
+		food = regions[newRow][newCol].get_food(a, dt);
 		return food;
 	}
 	void update_all_regions(double dt) {
