@@ -87,6 +87,7 @@ public class Controller {
 	    }
 	    if (sv) view.close();
 	}
+	
 	private List<ObjInfo> to_animals_info(List<? extends AnimalInfo> animals) {
 		List<ObjInfo> ol = new ArrayList<>(animals.size());
 		for (AnimalInfo a : animals)
@@ -95,6 +96,7 @@ public class Controller {
 		(int) a.get_position().getY(),(int)Math.round(a.get_age())+2));
 		return ol;
 		}
+	
 	public void reset(int cols, int rows, int width, int height) {
 		this._sim.reset(cols, rows, width, height);
 	}

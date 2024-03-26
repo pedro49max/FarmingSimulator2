@@ -1,11 +1,13 @@
 package simulator.view;
 
 import java.util.List;
+import java.util.Locale;
 
 import javax.swing.*;
 import java.awt.*;
 
 import simulator.control.Controller;
+import simulator.launcher.Main;
 import simulator.model.AnimalInfo;
 import simulator.model.EcoSysObserver;
 import simulator.model.MapInfo;
@@ -16,10 +18,12 @@ public class StatusBar extends JPanel implements EcoSysObserver{
 	private JLabel timeLabel;
     private JLabel animalsLabel;
     private JLabel dimensionsLabel;
-
+    private Controller _ctrl;
     
     StatusBar(Controller ctrl){
     initGUI();
+    _ctrl = ctrl;
+    _ctrl.addObserver(this);
     }
     
     private void initGUI() {
@@ -29,7 +33,7 @@ public class StatusBar extends JPanel implements EcoSysObserver{
         // Time label
         timeLabel = new JLabel("Time: ");
         this.add(timeLabel);
-
+        
         // Separator
         JSeparator separator1 = new JSeparator(JSeparator.VERTICAL);
         separator1.setPreferredSize(new Dimension(10, 20));
@@ -49,8 +53,9 @@ public class StatusBar extends JPanel implements EcoSysObserver{
         this.add(dimensionsLabel);
     }
 
-    public void updateTime(int time) {
-        timeLabel.setText("Time: " + time);
+    public void updateTime(double time) {
+    	String formattedValue = String.format(Locale.getDefault(), "%.3f", time).replace(',', '.');
+        timeLabel.setText("Time: " + formattedValue);
     }
 
     public void updateAnimalCount(int count) {
@@ -69,7 +74,9 @@ public class StatusBar extends JPanel implements EcoSysObserver{
 	@Override
 	public void onReset(double time, MapInfo map, List<AnimalInfo> animals) {
 		// TODO Auto-generated method stub
-		
+		updateTime(time);
+		updateAnimalCount(animals.size());
+		updateDimensions(map.get_width(), map.get_height(), map.get_rows(), map.get_cols());
 	}
 
 	@Override
@@ -87,7 +94,9 @@ public class StatusBar extends JPanel implements EcoSysObserver{
 	@Override
 	public void onAdvanced(double time, MapInfo map, List<AnimalInfo> animals, double dt) {
 		// TODO Auto-generated method stub
-		
+		updateTime(time);
+		updateAnimalCount(animals.size());
+		updateDimensions(map.get_width(), map.get_height(), map.get_rows(), map.get_cols());
 	}
 	
 }

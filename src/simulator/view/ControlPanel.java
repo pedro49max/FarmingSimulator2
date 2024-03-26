@@ -2,12 +2,19 @@ package simulator.view;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.*;
 
 import simulator.control.Controller;
 import simulator.launcher.Main;
+import simulator.model.AnimalInfo;
+import simulator.model.MapInfo;
+import simulator.model.Simulator;
+import simulator.view.SimpleObjectViewer.ObjInfo;
 
 public class ControlPanel extends JPanel {
     private Controller _ctrl;
@@ -26,6 +33,7 @@ public class ControlPanel extends JPanel {
 
     ControlPanel(Controller ctrl) {
         _ctrl = ctrl;
+        _changeRegionsDialog = new ChangeRegionsDialog(ctrl);
         initGUI();
     }
 
@@ -43,7 +51,16 @@ public class ControlPanel extends JPanel {
         _fileButton = new JButton();
         _fileButton.setToolTipText("Load an input file");
         _fileButton.setIcon(new ImageIcon("resources/icons/open.png"));
-        //_fileButton.addActionListener(this::);
+        _fileButton.addActionListener((ActionListener) new ActionListener() {
+        	@Override
+            public void actionPerformed(ActionEvent e) {
+                int result = _fc.showOpenDialog(ControlPanel.this);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = _fc.getSelectedFile();
+                    System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+                }
+            }
+        });
         _toolBar.add(_fileButton);
         
      // Map Button
@@ -52,7 +69,7 @@ public class ControlPanel extends JPanel {
         _mapButton = new JButton();
         _mapButton.setToolTipText("Map Viewer");
         _mapButton.setIcon(new ImageIcon("resources/icons/viewer.png"));
-        //_mapButton.addActionListener(this::);
+        _mapButton.addActionListener(this::map_view);
         _toolBar.add(_mapButton);
         
         
@@ -60,12 +77,10 @@ public class ControlPanel extends JPanel {
         _toolBar.add(Box.createGlue());
         _toolBar.addSeparator();
         _regButton = new JButton();
-        _regButton.setToolTipText("Map Viewer");
+        _regButton.setToolTipText("Change Regions");
         _regButton.setIcon(new ImageIcon("resources/icons/regions.png"));
-        //_regButton.addActionListener(this::);
+        _regButton.addActionListener(this::openRegions);
         _toolBar.add(_regButton);
-        // Initialize change regions dialog
-        _changeRegionsDialog = new ChangeRegionsDialog(_ctrl);
      
         // Run Button
         _toolBar.add(Box.createGlue());
@@ -82,7 +97,7 @@ public class ControlPanel extends JPanel {
         _stopButton = new JButton();
         _stopButton.setToolTipText("Stop Simulation");
         _stopButton.setIcon(new ImageIcon("resources/icons/stop.png"));
-        _stopButton.setEnabled(true);
+        _stopButton.setEnabled(false);
         _stopButton.addActionListener(this::stopSimulation);
         _toolBar.add(_stopButton);
 
@@ -115,6 +130,9 @@ public class ControlPanel extends JPanel {
         _stopped = false;
         _runButton.setEnabled(false);
         _quitButton.setEnabled(false);
+        _fileButton.setEnabled(false);
+        _mapButton.setEnabled(false);
+        _regButton.setEnabled(false);
         _stopButton.setEnabled(true);
 
         double deltaTime;
@@ -136,9 +154,19 @@ public class ControlPanel extends JPanel {
 
         run_sim(steps, deltaTime);
     }
+    
+    private void openRegions(ActionEvent e) {
+    	_changeRegionsDialog.open((JFrame) SwingUtilities.getWindowAncestor(ControlPanel.this));
+    }
 
     private void stopSimulation(ActionEvent e) {
         _stopped = true;
+        _runButton.setEnabled(true);
+        _stopButton.setEnabled(false);
+        _quitButton.setEnabled(true);
+        _fileButton.setEnabled(true);
+        _mapButton.setEnabled(true);
+        _regButton.setEnabled(true);
     }
 
     private void run_sim(int n, double dt) {
@@ -151,13 +179,30 @@ public class ControlPanel extends JPanel {
                 _stopped = true;
                 _runButton.setEnabled(true);
                 _quitButton.setEnabled(true);
-                _stopButton.setEnabled(false);
+                _stopButton.setEnabled(true);
             }
         } else {
-            _stopped = true;
-            _runButton.setEnabled(true);
-            _quitButton.setEnabled(true);
-            _stopButton.setEnabled(false);
+            _stopped = false;
+            _runButton.setEnabled(false);
+            _quitButton.setEnabled(false);
+            _stopButton.setEnabled(true);
         }
+    }
+    
+
+	private List<ObjInfo> to_animals_info(List<? extends AnimalInfo> animals) {
+		List<ObjInfo> ol = new ArrayList<>(animals.size());
+		for (AnimalInfo a : animals)
+		ol.add(new ObjInfo(a.get_genetic_code(),
+		(int) a.get_position().getX(),
+		(int) a.get_position().getY(),(int)Math.round(a.get_age())+2));
+		return ol;
+		}
+    
+    private void map_view(ActionEvent e) {
+    	Simulator sim = _ctrl.getSim();
+    	MapInfo m = sim.get_map_info();
+		SimpleObjectViewer view = new SimpleObjectViewer("[ECOSYSTEM]",m.get_width(), m.get_height(),m.get_cols(), m.get_rows());
+		view.update(to_animals_info(sim.get_animals()), sim.get_time(), Main._deltaTime);
     }
 }
