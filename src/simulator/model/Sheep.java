@@ -24,7 +24,7 @@ public class Sheep extends Animal{
 		if(_state == _state.DEAD)
 			return;
 		else if(_state == _state.NORMAL) {
-			if(_pos.dot(_dest) < 8)
+			if(_pos.distanceTo(_dest) < 8)
 				_dest = Vector2D.get_random_vectorXY(0, _region_mngr.get_width()-1, 0, _region_mngr.get_height()-1);
 			move(_speed*dt*Math.exp((_energy - 100.0)*0.007));
 			_age += dt;

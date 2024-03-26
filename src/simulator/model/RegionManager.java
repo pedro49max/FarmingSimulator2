@@ -63,16 +63,18 @@ public class RegionManager implements AnimalMapView{
 			newCol = this.colums - 1;
 		if(newRow >= this.rows)
 			newRow = this.rows - 1;
+		//cannot use the iterator, some errors appear
 		regions[newRow][newCol].add_animal(a);
 		this.animal_region.put(a, regions[newRow][newCol]);
 		a.init(this);
 	}
 	void unregister_animal(Animal a) {
 		Vector2D pos= a.get_position();
-		int newCol =  Math.max(0, Math.min(colums -1, (int) (pos.getX() / this.regWidth)));
-		int newRow = Math.max(0, Math.min(rows -1, (int) (pos.getY() / this.regHeight)));
-		regions[newRow][newCol].remove_animal(a);
-		this.animal_region.remove(a, regions[newRow][newCol]);
+		Region tmp = getRegionAtPosition(pos);
+		if(tmp!=null) {
+			tmp.remove_animal(a);
+			this.animal_region.remove(a, tmp);
+		}else a._state = State.DEAD;//animal out of the map
 	}
 	void unregister_animal(Animal a, Region r) {
 		r.remove_animal(a);
@@ -116,11 +118,12 @@ public class RegionManager implements AnimalMapView{
 		}
 	}
 	public double get_food(Animal a, double dt) {
-		double food;
+		double food = 0;
 		Vector2D pos= a.get_position();
-		int newCol =  Math.max(0, Math.min(colums -1, (int) (pos.getX() / this.regWidth)));
-		int newRow = Math.max(0, Math.min(rows -1, (int) (pos.getY() / this.regHeight)));
-		food = regions[newRow][newCol].get_food(a, dt);
+		//System.out.println(pos.getX()+ " " + pos.getY() + " " + this.mapWidth + " " + this.mapHeight);
+		Region tmp = getRegionAtPosition(pos);
+		if(tmp != null)
+			food = tmp.get_food(a, dt);
 		return food;
 	}
 	void update_all_regions(double dt) {
@@ -195,18 +198,15 @@ public class RegionManager implements AnimalMapView{
 		return this.regHeight;
 	}
 	public Region getRegionAtPosition(Vector2D position) {
-		int row = 0;
-	    int col = 0;
-        for (RegionData data : this) {
-            if (position.getX() >= col * regWidth && position.getX() < (col + 1) * regWidth && position.getY() >= row * regHeight && position.getY() < (row + 1) * regHeight) {
-                return (Region) data.getR();
-            }
-            col++;
-            if (col >= colums) {
-                col = 0;
-                row++;
-            }
-        }
+		Iterator<RegionData> regions = new RegionIterator();
+		if(position.getX() < this.regWidth && position.getY() < this.regHeight)
+			return this.regions[0][0];
+		while(regions.hasNext()) {
+			RegionData region = regions.next();
+			if(position.getX()>= region.getCol() * this.regWidth && position.getX() <(region.getCol() + 1) * this.regWidth && position.getY() >= region.getRow() * regHeight && position.getY() < (region.getRow() + 1) * regHeight) {
+				return this.regions[region.getRow()][region.getCol()];
+			}
+		}
         return null; // Or throw an exception if no region is found
     }
 

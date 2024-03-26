@@ -12,5 +12,11 @@ public interface MapInfo extends JSONable, Iterable<MapInfo.RegionData>{
 		public Object getR() {
 			return r;
 		}
+		public int getRow() {
+			return row;
+		}
+		public int getCol() {
+			return col;
+		}
 	}
 }
