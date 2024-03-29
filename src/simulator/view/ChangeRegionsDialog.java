@@ -4,8 +4,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 import java.awt.event.*;
 import simulator.control.Controller;
@@ -39,6 +39,7 @@ public class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         setContentPane(mainPanel);
+        MapInfo map = _ctrl.getSim().get_map_info();
 
         JLabel helpText = new JLabel("Select a region type, the rows/cols interval, and provide values for the paramters in the VALUE column (default values \n are used for parameters with no value).");
         mainPanel.add(helpText);
@@ -51,22 +52,42 @@ public class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
         _toColModel = new DefaultComboBoxModel<>();
         
         for (JSONObject region : _regionsInfo) {
-            _regionsModel.addElement(region.optString("desc", "Unknown"));
+            String regionName = region.optString("type");
+            _regionsModel.addElement(regionName);
         }
         
-        for (int k = 0 ; k < _ctrl.getSim().get_map_info().get_rows(); k++) {
+        for (int k = 0 ; k < map.get_rows(); k++) {
         	String str = "" + k;
         	_fromRowModel.addElement(str);
         	_toRowModel.addElement(str);
         }
         
-        for (int k = 0; k < _ctrl.getSim().get_map_info().get_cols(); k++) {
+        for (int k = 0; k < map.get_cols(); k++) {
         	String str = "" + k;
         	_fromColModel.addElement(str);
         	_toColModel.addElement(str);
         }
         
         JComboBox<String> regionComboBox = new JComboBox<>(_regionsModel);
+        
+        regionComboBox.addActionListener(new ActionListener() {
+        	@Override
+        	public void actionPerformed(ActionEvent e) {
+        		// Add additional rows for "food" and "factor" for "dynamic" region type
+	            String regionType = regionComboBox.getSelectedItem().toString();
+	            if ("dynamic".equals(regionType)) {
+	                _dataTableModel.addRow(new Object[] { "food", "", "initial amount of food" });
+	                _dataTableModel.addRow(new Object[] { "factor", "", "food increase factor" });
+	            }
+	            else {
+	            	if (_dataTableModel.getRowCount() != 0) {
+	            		removeAllRows(_dataTableModel);
+	            	}
+	            }
+        	}
+        });
+       
+        
         JComboBox<String> rowComboBox = new JComboBox<>(_fromRowModel);
         JComboBox<String> toRowComboBox = new JComboBox<>(_toRowModel);
         JComboBox<String> colComboBox = new JComboBox<>(_fromColModel);
@@ -80,6 +101,7 @@ public class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
         };
         _dataTableModel.setColumnIdentifiers(_headers);
         JTable dataTable = new JTable(_dataTableModel);
+        
         JScrollPane tableScrollPane = new JScrollPane(dataTable);
         mainPanel.add(tableScrollPane);
         
@@ -100,29 +122,98 @@ public class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
             public void actionPerformed(ActionEvent e) {
                 // Implement the logic for OK button
                 // Retrieve selected region, row, column, and table data
+            	String regionType = regionComboBox.getSelectedItem().toString();
+                
+                // Retrieve selected row and column ranges from the combo boxes
+                int fromRow = Integer.parseInt(rowComboBox.getSelectedItem().toString());
+                int toRow = Integer.parseInt(toRowComboBox.getSelectedItem().toString());
+                int fromCol = Integer.parseInt(colComboBox.getSelectedItem().toString());
+                int toCol = Integer.parseInt(toColComboBox.getSelectedItem().toString());
                 // Construct JSON data and pass it to _ctrl.set_regions()
+                JSONObject regionData = new JSONObject();
+                regionData.put("row", new JSONArray().put(fromRow).put(toRow));
+                regionData.put("col", new JSONArray().put(fromCol).put(toCol));
+                regionData.put("spec", new JSONObject()
+                                            .put("type", regionType)
+                                            .put("data", regionType == "dynamic" ? constructRegionData(_dataTableModel) : "{}" )); // Construct this method to get region data
+                
+                JSONObject regionsJSON = new JSONObject();
+                regionsJSON.put("regions", new JSONArray().put(regionData));
+                _ctrl.set_regions(regionsJSON);
                 // Handle exceptions and close the dialog
             	setVisible(false);
             }
         });
         
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setPreferredSize(new Dimension(200, 200));
-        buttonPanel.add(regionComboBox, BorderLayout.NORTH);
-        buttonPanel.add(rowComboBox, BorderLayout.NORTH);
-        buttonPanel.add(toRowComboBox, BorderLayout.NORTH);
-        buttonPanel.add(colComboBox, BorderLayout.NORTH);
-        buttonPanel.add(toColComboBox, BorderLayout.NORTH);
+        JPanel buttonP2 = new JPanel();
+        buttonPanel.setPreferredSize(new Dimension(200, 100));
+        JLabel regionLabel = new JLabel ("Region Type: ");
+        buttonPanel.add(regionLabel);
+        buttonPanel.add(regionComboBox);
+        JLabel rowLabel = new JLabel ("Row from/to: ");
+        buttonPanel.add(rowLabel);
+        buttonPanel.add(rowComboBox);
+        buttonPanel.add(toRowComboBox);
+        JLabel columnLabel = new JLabel ("Column from/to: ");
+        buttonPanel.add(columnLabel);
+        buttonPanel.add(colComboBox);
+        buttonPanel.add(toColComboBox);
+        
         //CANCEL AND OK
-        buttonPanel.add(cancelButton, BorderLayout.SOUTH);
-        buttonPanel.add(okButton, BorderLayout.SOUTH);
+        buttonP2.add(cancelButton, BorderLayout.SOUTH);
+        buttonP2.add(okButton, BorderLayout.SOUTH);
         mainPanel.add(buttonPanel);
+        mainPanel.add(buttonP2);
        
         setPreferredSize(new Dimension(700, 400));
         pack();
         setResizable(false);
         setVisible(false);
     }
+    
+    private JSONObject constructRegionData(DefaultTableModel t) {
+        Object factorObj = t.getValueAt(0, 1);
+        Object foodObj = t.getValueAt(1, 1);
+
+        try {
+            double factor = 0.0;
+            double food = 0.0;
+
+            if (factorObj != null) {
+                String factorStr = factorObj.toString().trim();
+                if (!factorStr.isEmpty()) {
+                    factor = Double.parseDouble(factorStr);
+                }
+            }
+
+            if (foodObj != null) {
+                String foodStr = foodObj.toString().trim();
+                if (!foodStr.isEmpty()) {
+                    food = Double.parseDouble(foodStr);
+                }
+            }
+
+            JSONObject j = new JSONObject();
+            j.put("factor", factor);
+            j.put("food", food);
+
+            return j;
+        } catch (NumberFormatException e) {
+            System.err.println("Error parsing double values: " + e.getMessage());
+            return null; // or handle the error as needed
+        }
+    }
+
+
+    
+    private void removeAllRows(DefaultTableModel t) {
+        int rowCount = t.getRowCount();
+        for (int i = rowCount - 1; i >= 0; i--) {
+            t.removeRow(i);
+        }
+    }
+
 
     public void open(Frame parent) {
         setLocationRelativeTo(parent);
@@ -153,7 +244,7 @@ public class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 	@Override
 	public void onRegionSet(int row, int col, MapInfo map, RegionInfo r) {
 		// TODO Auto-generated method stub
-		
+		_dataTableModel.fireTableDataChanged();
 	}
 
 	@Override
@@ -161,5 +252,7 @@ public class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	
 
 }

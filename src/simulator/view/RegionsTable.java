@@ -98,13 +98,11 @@ class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 	@Override
 	public void onRegister(double time, MapInfo map, List<AnimalInfo> animals) {
 		updateRegionsTable(map);
-		fireTableDataChanged();
 	}
 
 	@Override
 	public void onReset(double time, MapInfo map, List<AnimalInfo> animals) {
 		updateRegionsTable(map);
-		fireTableDataChanged();
 	}
 
 	@Override
@@ -119,7 +117,8 @@ class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 
 	@Override
 	public void onAdvanced(double time, MapInfo map, List<AnimalInfo> animals, double dt) {
-		// Not used in this table
+		updateRegionsTable(map);
+		
 	}
 	
 	private void updateRegionsTable(MapInfo map) {
@@ -129,6 +128,6 @@ class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 				_regions.add(r2);
 			}
 		}
-			
+		fireTableDataChanged();	
 	}
 }

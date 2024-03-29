@@ -32,6 +32,6 @@ public class DynamicSupplyRegion extends Region{
 	}
 	@Override
 	public String toString() {
-		return "Dynamic region";
+		return "Dynamic Supply Region";
 	}
 }
