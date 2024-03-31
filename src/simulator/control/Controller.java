@@ -22,10 +22,6 @@ public class Controller {
 		this._sim = sim;
 	}
 	
-	public Simulator getSim() {
-		return _sim;
-	}
-	
 	public void load_data(JSONObject data) {
 		// Check if regions are present
         this.set_regions(data);
@@ -110,6 +106,7 @@ public class Controller {
                 int cf = regionObj.getJSONArray("col").getInt(0);
                 int ct = regionObj.getJSONArray("col").getInt(1);
                 JSONObject spec = regionObj.getJSONObject("spec");
+                
                 for (int row = rf; row <= rt; row++) 
                     for (int col = cf; col <= ct; col++) 
                         this._sim.set_region(row, col, spec);               

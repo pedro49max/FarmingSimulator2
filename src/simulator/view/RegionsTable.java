@@ -25,9 +25,9 @@ class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 		_regions = new ArrayList<Region>(); // Initialize as null
 		_diets = Diet.values();
 		_ctrl.addObserver(this);
-		MapInfo info = ctrl.getSim().get_map_info();
-		numRows = info.get_rows();
-		numCols = info.get_cols();
+		//MapInfo info = ctrl.getSim().get_map_info();
+		numRows = 1;
+		numCols = 1;
 	}
 
 	@Override
@@ -89,6 +89,8 @@ class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 		default:
 			if (columnIndex - 3 < _diets.length)
 				return countAnimalsWithDiet(_regions.get(rowIndex).getAnimalsInfo(), _diets[columnIndex - 3]);
+			else
+				break;
 			
 		}
 
@@ -97,37 +99,48 @@ class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 
 	@Override
 	public void onRegister(double time, MapInfo map, List<AnimalInfo> animals) {
-		updateRegionsTable(map);
+		numCols = map.get_cols();
+		numRows = map.get_rows();
+		//updateRegionsTable(map);
 	}
 
 	@Override
 	public void onReset(double time, MapInfo map, List<AnimalInfo> animals) {
-		updateRegionsTable(map);
+		if (!_regions.isEmpty())
+			_regions.clear();
 	}
 
 	@Override
 	public void onAnimalAdded(double time, MapInfo map, List<AnimalInfo> animals, AnimalInfo a) {
 		// Not used in this table
+		
 	}
 
 	@Override
 	public void onRegionSet(int row, int col, MapInfo map, RegionInfo r) {
 		// Not used in this table
+		numCols = map.get_cols();
+		numRows = map.get_rows();
+		updateRegionsTable(map);
 	}
 
 	@Override
 	public void onAdvanced(double time, MapInfo map, List<AnimalInfo> animals, double dt) {
+		numCols = map.get_cols();
+		numRows = map.get_rows();
 		updateRegionsTable(map);
 		
 	}
 	
 	private void updateRegionsTable(MapInfo map) {
-		_regions.clear();
+		if (!_regions.isEmpty())
+			_regions.clear();
 		for (Region[] r : map.getRegions()) {
 			for (Region r2 : r) {
 				_regions.add(r2);
+				fireTableDataChanged();	
 			}
 		}
-		fireTableDataChanged();	
+		
 	}
 }

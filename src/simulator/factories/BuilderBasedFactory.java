@@ -34,6 +34,9 @@ public class BuilderBasedFactory<T> implements Factory<T> {
 
         if (builder != null) {
             JSONObject data = info.optJSONObject("data");
+            /*for (String key : data.keySet()) {
+            	System.out.println(key + "  " + data.getString(key));
+            }*/
             return builder.create_instance(data != null ? data : new JSONObject());
         } else {
             throw new IllegalArgumentException("Unrecognized 'info': " + info.toString());

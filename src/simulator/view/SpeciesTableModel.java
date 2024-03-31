@@ -6,7 +6,6 @@ import java.util.Map;
 import javax.swing.table.AbstractTableModel;
 
 import simulator.control.Controller;
-import simulator.model.Animal;
 import simulator.model.AnimalInfo;
 import simulator.model.EcoSysObserver;
 import simulator.model.MapInfo;
@@ -24,7 +23,7 @@ class SpeciesTableModel extends AbstractTableModel implements EcoSysObserver {
         _ctrl = ctrl;
         _speciesMap = new HashMap<>();
         _states = State.values();
-        ctrl.addObserver(this);
+        _ctrl.addObserver(this);
     }
     
     @Override
@@ -56,10 +55,13 @@ class SpeciesTableModel extends AbstractTableModel implements EcoSysObserver {
 
         if (columnIndex == 0) {
             return geneticCode;
-        } else {
+        } else if (columnIndex > 0 && columnIndex <= _states.length){
             State state = _states[columnIndex - 1];
-            return _speciesMap.getOrDefault(geneticCode, new HashMap<>()).getOrDefault(state, 0);
+            return _speciesMap.get(geneticCode).getOrDefault(state,0);
+            //return _speciesMap.getOrDefault(geneticCode, new HashMap<>()).getOrDefault(state, 0);
         }
+        else
+        	return "";
     }
 
     @Override
@@ -69,7 +71,8 @@ class SpeciesTableModel extends AbstractTableModel implements EcoSysObserver {
 
     @Override
     public void onReset(double time, MapInfo map, List<AnimalInfo> animals) {
-        updateSpeciesMap(animals);
+    	if (!_speciesMap.isEmpty())
+    		_speciesMap.clear();
     }
 
     @Override
@@ -78,23 +81,37 @@ class SpeciesTableModel extends AbstractTableModel implements EcoSysObserver {
     }
 
     @Override
-    public void onRegionSet(int row, int col, MapInfo map, RegionInfo r) {
-        // Not used in this table
-    }
-
-    @Override
     public void onAdvanced(double time, MapInfo map, List<AnimalInfo> animals, double dt) {
         updateSpeciesMap(animals);
     }
 
     private void updateSpeciesMap(List<AnimalInfo> animals) {
-        _speciesMap.clear();
+        if (!_speciesMap.isEmpty()) {
+            // Clear the existing counts
+            _speciesMap.clear();
+        }
+
+        // Loop through the animals
         for (AnimalInfo animalInfo : animals) {
             String geneticCode = animalInfo.get_genetic_code();
             State state = animalInfo.get_state();
-            _speciesMap.computeIfAbsent(geneticCode, k -> new HashMap<>())
-                    .merge(state, 1, Integer::sum);
+            
+            // Retrieve the map for the genetic code
+            Map<State, Integer> stateMap = _speciesMap.computeIfAbsent(geneticCode, k -> new HashMap<>());
+
+            // Increment the count for the state in the state map
+            int count = stateMap.getOrDefault(state, 0);
+            stateMap.put(state, count + 1);
         }
+
+        // Notify listeners that the table data has changed
         fireTableDataChanged();
     }
+
+
+	@Override
+	public void onRegionSet(int row, int col, MapInfo map, RegionInfo r) {
+		// TODO Auto-generated method stub
+		 updateSpeciesMap(r.getAnimalsInfo());
+	}
 }
