@@ -72,10 +72,10 @@ public class RegionManager implements AnimalMapView{
 		Vector2D pos= a.get_position();
 		Region tmp = getRegionAtPosition(pos);
 		if(tmp!=null) {
-			tmp.remove_animal(a);
-			this.animal_region.remove(a, tmp);
+			unregister_animal(a,tmp);
 		}else a._state = State.DEAD;//animal out of the map
 	}
+	
 	void unregister_animal(Animal a, Region r) {
 		r.remove_animal(a);
 		this.animal_region.remove(a, r);
@@ -128,8 +128,10 @@ public class RegionManager implements AnimalMapView{
 	}
 	void update_all_regions(double dt) {
 		for(int r = 0; r < this.rows; r++) 
-			for(int c = 0; c < this.get_cols(); c++)
+			for(int c = 0; c < this.get_cols(); c++) {
 				regions[r][c].update(dt);
+				//System.out.println(r + " " + c + " " + regions[r][c] + " " + regions[r][c].getAnimalsInfo().size());
+			}
 	}
 	public List<Animal> get_animals_in_range(Animal a, Predicate<Animal> filter){
 		List<Animal> animals = new ArrayList<>();

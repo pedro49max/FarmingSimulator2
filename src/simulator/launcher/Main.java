@@ -260,8 +260,8 @@ public class Main {
 	        // Create the controller instance and run the simulation
 	        Controller controller = new Controller(simulator);
 	        controller.load_data(inputJSON);
-	        JFrame frame = new MainWindow(controller);
-	        frame.setVisible(true);
+	        //JFrame frame = new MainWindow(controller);
+	        //frame.setVisible(true);
 	        controller.run(_time, _deltaTime, _simple_view, os);
 	        os.close();
 	    }

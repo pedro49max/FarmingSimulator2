@@ -108,6 +108,7 @@ class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 	public void onReset(double time, MapInfo map, List<AnimalInfo> animals) {
 		if (!_regions.isEmpty())
 			_regions.clear();
+		//_ctrl.reset(map.get_cols(), map.get_rows(), map.get_width(), map.get_height());
 	}
 
 	@Override
@@ -138,6 +139,7 @@ class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 		for (Region[] r : map.getRegions()) {
 			for (Region r2 : r) {
 				_regions.add(r2);
+				//System.out.println(r2.toString() + " " + r2.getAnimalsInfo().size());
 				fireTableDataChanged();	
 			}
 		}
