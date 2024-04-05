@@ -51,13 +51,15 @@ class SpeciesTableModel extends AbstractTableModel implements EcoSysObserver {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         List<String> geneticCodes = new ArrayList<>(_speciesMap.keySet());
-        String geneticCode = geneticCodes.get(rowIndex);
+        String geneticCode = "";
+        if (rowIndex < geneticCodes.size())
+         geneticCode = geneticCodes.get(rowIndex);
 
         if (columnIndex == 0) {
             return geneticCode;
         } else if (columnIndex > 0 && columnIndex <= _states.length){
             State state = _states[columnIndex - 1];
-            return _speciesMap.get(geneticCode).getOrDefault(state,0);
+            return _speciesMap.getOrDefault(geneticCode, new HashMap<>()).getOrDefault(state,0);
             //return _speciesMap.getOrDefault(geneticCode, new HashMap<>()).getOrDefault(state, 0);
         }
         else

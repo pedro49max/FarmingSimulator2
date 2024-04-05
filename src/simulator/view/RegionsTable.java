@@ -13,6 +13,7 @@ import simulator.model.EcoSysObserver;
 import simulator.model.MapInfo;
 import simulator.model.Region;
 import simulator.model.RegionInfo;
+import simulator.model.State;
 
 class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 	private Controller _ctrl;
@@ -44,7 +45,7 @@ class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 	private int countAnimalsWithDiet(List<AnimalInfo> animals, Diet diet) {
 		int count = 0;
 		for (AnimalInfo animal : animals) {
-			if (animal.get_diet() == diet) {
+			if (animal.get_diet() == diet && animal.get_state() != State.DEAD) {
 				count++;
 			}
 		}
@@ -77,18 +78,28 @@ class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
+		
+		int rowI = 0;
+		if (rowIndex < getRowCount()) {
+			rowI = rowIndex;
+		}
 		// To be checked
 		switch (columnIndex) {
 		case 0:
 			if (numCols > 0)
-				return rowIndex < numCols ? 0 : rowIndex / numCols;
+				return rowI < numCols ? 0 : rowI / numCols;
 		case 1:
-			return rowIndex < numCols ? rowIndex : rowIndex % numCols;
+			return rowI < numCols ? rowI : rowI % numCols;
 		case 2:
-			return _regions.get(rowIndex).toString();
+			return _regions.get(rowI).toString();
 		default:
-			if (columnIndex - 3 < _diets.length)
-				return countAnimalsWithDiet(_regions.get(rowIndex).getAnimalsInfo(), _diets[columnIndex - 3]);
+			if (columnIndex - 3 < _diets.length) {
+				if (!_regions.isEmpty()) {
+					Region r = _regions.get(rowI);
+				
+				return countAnimalsWithDiet(_regions.get(rowI).getAnimalsInfo(), _diets[columnIndex - 3]);
+				}
+			}
 			else
 				break;
 			
