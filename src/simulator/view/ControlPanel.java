@@ -1,6 +1,7 @@
 package simulator.view;
 
 import java.awt.BorderLayout;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -235,6 +236,16 @@ public class ControlPanel extends JPanel {
 	}
 
 	private void map_view(ActionEvent e) {
-		
+	    // Instantiate a new MapWindow
+	    Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(this);
+	    
+	    // Create a new MapWindow instance with the parent frame and the controller
+	    MapWindow mapWindow = new MapWindow(parentFrame, _ctrl);
+	    
+	    // Set the default close operation to dispose to close the window without exiting the application
+	    mapWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	    
+	    // Make the new MapWindow visible
+	    mapWindow.setVisible(true);
 	}
 }

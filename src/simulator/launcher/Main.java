@@ -63,7 +63,7 @@ public class Main {
 	private static String _in_file = null;
 	private static String _out_file = null;
 	private static boolean _simple_view = false;
-	private static ExecMode _mode = ExecMode.BATCH;
+	private static ExecMode _mode = ExecMode.GUI;
 	public static Factory<Animal> animals_factory;
 	public static Factory<Region> regions_factory;
 	public static Factory<SelectionStrategy> strategyFactory;
@@ -260,8 +260,8 @@ public class Main {
 	        // Create the controller instance and run the simulation
 	        Controller controller = new Controller(simulator);
 	        controller.load_data(inputJSON);
-	        JFrame frame = new MainWindow(controller);
-	        frame.setVisible(true);
+	        //JFrame frame = new MainWindow(controller);
+	        //frame.setVisible(true);
 	        controller.run(_time, _deltaTime, _simple_view, os);
 	        os.close();
 	    }
@@ -271,8 +271,35 @@ public class Main {
 	}
 
 	private static void start_GUI_mode() throws Exception {
-		throw new UnsupportedOperationException("GUI mode is not ready yet ...");
+	    // Initialize the simulation environment with default values
+	    int width = 800; // Default width
+	    int height = 600; // Default height
+	    int cols = 15; // Default number of columns
+	    int rows = 20; // Default number of rows
+	    
+	    // Create the simulator instance
+	    Simulator simulator = new Simulator(cols, rows, width, height, animals_factory, regions_factory);
+	    Controller controller = new Controller(simulator);
+
+	    /*
+	    // If an input file is provided, load it to configure the simulator
+	    if (_in_file != null) {
+	        try (InputStream is = new FileInputStream(new File(_in_file))) {
+	            JSONObject inputJSON = load_JSON_file(is);
+	            controller.load_data(inputJSON); // Load data into the simulator using the controller
+	        } catch (IOException e) {
+	            throw new Exception("Error reading the input file: " + _in_file, e);
+	        }
+	    }
+	    */
+	    
+	    // Initialize the main window of the GUI
+	    SwingUtilities.invokeAndWait(() -> {
+	        MainWindow mainWindow = new MainWindow(controller);
+	        mainWindow.setVisible(true);
+	    });
 	}
+
 
 	private static void start(String[] args) throws Exception {
 		init_factories();
