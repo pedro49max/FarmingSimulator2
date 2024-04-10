@@ -2,6 +2,7 @@ package simulator.view;
 
 import java.awt.BorderLayout;
 import java.awt.Frame;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -76,9 +77,14 @@ public class MapWindow extends JFrame implements EcoSysObserver {
     // PENDING
     @Override
     public void onRegionSet(int row, int col, MapInfo map, RegionInfo r) {
-        // Since the entire map might change, it's safe to update the viewer
-        //_viewer.update(map.getAnimalsInfo(), _ctrl.getTime());
+        List<AnimalInfo> allAnimals = new ArrayList<>();
+        for (MapInfo.RegionData regionData : map) { // Assuming MapInfo can be iterated to get RegionData
+            RegionInfo regionInfo = (RegionInfo) regionData.getR(); // Cast is necessary to call getAnimalsInfo
+            allAnimals.addAll(regionInfo.getAnimalsInfo()); // Aggregate AnimalInfo from each region
+        }
+        _viewer.update(allAnimals, _ctrl.getTime()); // Update the viewer with the list of animals
     }
+
     
     
     @Override

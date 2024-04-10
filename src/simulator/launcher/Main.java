@@ -281,7 +281,7 @@ public class Main {
 	    Simulator simulator = new Simulator(cols, rows, width, height, animals_factory, regions_factory);
 	    Controller controller = new Controller(simulator);
 
-	    /*
+	    /* PENDING (it launches the exception)
 	    // If an input file is provided, load it to configure the simulator
 	    if (_in_file != null) {
 	        try (InputStream is = new FileInputStream(new File(_in_file))) {

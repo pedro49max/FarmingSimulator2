@@ -122,4 +122,8 @@ public class Controller {
 	public void removeObserver(EcoSysObserver o) {
 		this._sim.removeObserver(o);
 	}
+	
+	public double getTime() {
+        return _sim.get_time();
+    }
 }
