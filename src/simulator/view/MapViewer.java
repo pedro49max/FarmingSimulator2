@@ -57,6 +57,9 @@ public class MapViewer extends AbstractMapViewer {
                     cycleState();
                     repaint();
                     break;
+                default:
+                	repaint();
+                	break;
                 }
             }
         });
@@ -117,14 +120,14 @@ public class MapViewer extends AbstractMapViewer {
 
         for (AnimalInfo a : animals) {
             if (!visible(a)) continue;
-
+            
             SpeciesInfo info = _kindsInfo.computeIfAbsent(a.get_genetic_code(),
                     k -> new SpeciesInfo(ViewUtils.get_color(a.get_genetic_code())));
             info._count++;
-
+            	
             // Calculate position
-            int x = (int) (a.get_position().getX() * _width);
-            int y = (int) (a.get_position().getY() * _height);
+            int x = (int) (a.get_position().getX());
+            int y = (int) (a.get_position().getY());
 
             int size = (int) (a.get_age() / 2 + 2);
             g.setColor(info._color);

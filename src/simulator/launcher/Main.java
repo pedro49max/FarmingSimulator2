@@ -277,27 +277,52 @@ public class Main {
 	    int cols = 15; // Default number of columns
 	    int rows = 20; // Default number of rows
 	    
-	    // Create the simulator instance
-	    Simulator simulator = new Simulator(cols, rows, width, height, animals_factory, regions_factory);
-	    Controller controller = new Controller(simulator);
+	    try (InputStream is = new FileInputStream(new File(_in_file));
+	            OutputStream os = new FileOutputStream(new File(_out_file))) {
+	        // Load the input JSON file
+	        JSONObject inputJSON = load_JSON_file(is);
 
-	    /* PENDING (it launches the exception)
-	    // If an input file is provided, load it to configure the simulator
-	    if (_in_file != null) {
-	        try (InputStream is = new FileInputStream(new File(_in_file))) {
-	            JSONObject inputJSON = load_JSON_file(is);
-	            controller.load_data(inputJSON); // Load data into the simulator using the controller
-	        } catch (IOException e) {
-	            throw new Exception("Error reading the input file: " + _in_file, e);
+	        // Extract parameters from the input JSON
+	        width = inputJSON.getInt("width");
+	        height= inputJSON.getInt("height");
+	        cols = inputJSON.getInt("cols");
+	        rows = inputJSON.getInt("rows");
+
+	        JSONArray animalsArray = inputJSON.getJSONArray("animals");
+
+	        // Create the simulator instance
+	        Simulator simulator = new Simulator(cols, rows, width, height, animals_factory, regions_factory);
+
+	        // Create animals based on the specifications provided in the input file
+	        for (int i = 0; i < animalsArray.length()-i - 2; i++) {
+	            JSONObject animalSpec = animalsArray.getJSONObject(i);
+	            int amount = animalSpec.getInt("amount");
+	            JSONObject animalData = animalSpec.getJSONObject("spec");
+	            String animalType = animalData.getString("type");
+
+	            // Create animals based on the type and amount specified
+	            for (int j = 0; j < (amount); j++) {//Hay que arreglar que se crean demasiados bichos
+	                simulator.add_animal(inputJSON);
+	            }
+	            
 	        }
+
+	        // Create the controller instance and run the simulation
+	        Controller controller = new Controller(simulator);
+	        controller.load_data(inputJSON);
+	        //JFrame frame = new MainWindow(controller);
+	        //frame.setVisible(true);
+	     // Initialize the main window of the GUI
+		    SwingUtilities.invokeAndWait(() -> {
+		        MainWindow mainWindow = new MainWindow(controller);
+		        mainWindow.setVisible(true);
+		    });
+		    
+	        os.close();
 	    }
-	    */
-	    
-	    // Initialize the main window of the GUI
-	    SwingUtilities.invokeAndWait(() -> {
-	        MainWindow mainWindow = new MainWindow(controller);
-	        mainWindow.setVisible(true);
-	    });
+		catch (IOException e) {
+	        System.err.println("Error opening input file: " + e.getMessage());
+	    }
 	}
 
 
