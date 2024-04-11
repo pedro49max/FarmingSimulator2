@@ -2,11 +2,15 @@ package simulator.view;
 
 import java.awt.BorderLayout;
 import java.awt.Frame;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
 import simulator.control.Controller;
 import simulator.model.AnimalInfo;
 import simulator.model.EcoSysObserver;
@@ -36,12 +40,48 @@ public class MapWindow extends JFrame implements EcoSysObserver {
         mainPanel.add(_viewer, BorderLayout.CENTER);
         
         // Handling the window closing event to remove 'MapWindow.this' from the observers
-        this.addWindowListener(new java.awt.event.WindowAdapter() {
+        this.addWindowListener(new WindowListener() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
                 _ctrl.removeObserver(MapWindow.this); // Remove this window from the observer list
                 dispose();
             }
+
+			@Override
+			public void windowOpened(WindowEvent e) {
+				// TODO Auto-generated method stub
+				_ctrl.addObserver(MapWindow.this);
+			}
+
+			@Override
+			public void windowClosed(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void windowIconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void windowDeiconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void windowActivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void windowDeactivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
         });
         
         pack();
@@ -57,21 +97,19 @@ public class MapWindow extends JFrame implements EcoSysObserver {
     @Override
     public void onRegister(double time, MapInfo map, List<AnimalInfo> animals) {
         // Reset the viewer with the current map and animals information
-        _viewer.reset(time, map, animals);
-        pack(); // Adjust the window size based on its content
+    	 SwingUtilities.invokeLater(() -> { _viewer.reset(time, map, animals); pack(); });
     }
     
     @Override
     public void onReset(double time, MapInfo map, List<AnimalInfo> animals) {
         // Same as onRegister for this context
-        _viewer.reset(time, map, animals);
-        pack();
+    	 SwingUtilities.invokeLater(() -> { _viewer.reset(time, map, animals); pack(); });
     }
     
     @Override
     public void onAnimalAdded(double time, MapInfo map, List<AnimalInfo> animals, AnimalInfo a) {
         // Update the viewer with the current map and animals information
-        _viewer.update(animals, time);
+    	//SwingUtilities.invokeLater(() -> _viewer.update(animals, time) );
     }
     
     // PENDING
@@ -82,7 +120,7 @@ public class MapWindow extends JFrame implements EcoSysObserver {
             RegionInfo regionInfo = (RegionInfo) regionData.getR(); // Cast is necessary to call getAnimalsInfo
             allAnimals.addAll(regionInfo.getAnimalsInfo()); // Aggregate AnimalInfo from each region
         }
-        _viewer.update(allAnimals, _ctrl.getTime()); // Update the viewer with the list of animals
+        SwingUtilities.invokeLater(() -> _viewer.update(allAnimals, _ctrl.getTime()) );
     }
 
     
@@ -90,6 +128,6 @@ public class MapWindow extends JFrame implements EcoSysObserver {
     @Override
     public void onAdvanced(double time, MapInfo map, List<AnimalInfo> animals, double dt) {
         // Update the viewer with the advanced simulation step
-        _viewer.update(animals, time);
+    	 SwingUtilities.invokeLater(() -> _viewer.update(animals, time) );
     }
 }

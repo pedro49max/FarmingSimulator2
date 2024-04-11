@@ -272,8 +272,8 @@ public class Main {
 
 	private static void start_GUI_mode() throws Exception {
 	    // Initialize the simulation environment with default values
-	    int width = 800; // Default width
-	    int height = 600; // Default height
+	    width = 800; // Default width
+	    height = 600; // Default height
 	    int cols = 15; // Default number of columns
 	    int rows = 20; // Default number of rows
 	    

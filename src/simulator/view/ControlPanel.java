@@ -242,10 +242,11 @@ public class ControlPanel extends JPanel {
 	    // Create a new MapWindow instance with the parent frame and the controller
 	    MapWindow mapWindow = new MapWindow(parentFrame, _ctrl);
 	    
-	    // Set the default close operation to dispose to close the window without exiting the application
-	    mapWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-	    
 	    // Make the new MapWindow visible
 	    mapWindow.setVisible(true);
+	    
+	    // Set the default close operation to dispose to close the window without exiting the application
+	    mapWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
 	}
 }
