@@ -208,7 +208,7 @@ public class ControlPanel extends JPanel {
 			}
 		} else {
 			_stopped = false;
-			_runButton.setEnabled(false);
+			//_runButton.setEnabled(false);
 			_quitButton.setEnabled(false);
 			_stopButton.setEnabled(true);
 		}
