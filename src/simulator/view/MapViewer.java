@@ -91,18 +91,44 @@ public class MapViewer extends AbstractMapViewer {
         gr.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         gr.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
+        // Set the font for the text
         g.setFont(_font);
+
+        // Set the background color to white and clear the area
         gr.setBackground(Color.WHITE);
         gr.clearRect(0, 0, getWidth(), getHeight());
 
+        // Draw the grid lines
+        drawGrid(gr);
+
+        // If the help is to be displayed, draw the help text
         if (_showHelp) {
             drawHelpText(gr);
         }
 
+        // If there are objects to be drawn, draw them
         if (_objs != null) {
             drawObjects(gr, _objs, _time);
         }
     }
+
+    private void drawGrid(Graphics2D g) {
+        // Set the color for the grid lines
+        g.setColor(Color.LIGHT_GRAY);
+
+        // Draw the horizontal grid lines
+        for (int i = 1; i < _rows; i++) {
+            int y = i * (_height / _rows);
+            g.drawLine(0, y, _width, y);
+        }
+
+        // Draw the vertical grid lines
+        for (int i = 1; i < _cols; i++) {
+            int x = i * (_width / _cols);
+            g.drawLine(x, 0, x, _height);
+        }
+    }
+
 
     private void drawHelpText(Graphics2D g) {
         g.setColor(Color.BLACK);
