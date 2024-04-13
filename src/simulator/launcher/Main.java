@@ -86,6 +86,7 @@ public class Main {
 			parse_output_option(line);
 			parse_delta_time_option(line);
 			parse_simple_viewer_option(line);
+			parse_mode_option(line);
 			// if there are some remaining arguments, then something wrong is
 			// provided in the command line!
 			//
@@ -133,6 +134,12 @@ public class Main {
 				.desc("An real number representing the total simulation time in seconds. Default value: "
 						+ _default_time + ".")
 				.build());
+		
+		// mode
+		cmdLineOptions.addOption(Option.builder("m").longOpt("mode")
+	            .hasArg()
+	            .desc("Execution Mode. Possible values: 'batch' (Batch mode), 'gui' (Graphical User Interface mode). Default value: 'gui'.")
+	            .build());
 
 		return cmdLineOptions;
 	}
@@ -185,6 +192,26 @@ public class Main {
 		} catch (Exception e) {
 			throw new ParseException("Invalid value for time: " + t);
 		}
+	}
+	
+	private static void parse_mode_option(CommandLine line) throws ParseException {
+		if (line.hasOption("m")) {
+            String modeInput = line.getOptionValue("m");
+            if ("batch".equals(modeInput)) {
+                _mode = ExecMode.BATCH;
+            } else if ("gui".equals(modeInput)) {
+                _mode = ExecMode.GUI;
+            } else {
+                throw new ParseException("Invalid mode selected: " + modeInput);
+            }
+        } else {
+            _mode = ExecMode.GUI;  // Default mode
+        }
+		
+		// Check required options for batch mode
+        if (_mode == ExecMode.BATCH && (_in_file == null || _out_file == null)) {
+            throw new ParseException("In batch mode, both input and output files are required");
+        }
 	}
 
 	private static void init_factories() {
@@ -304,7 +331,6 @@ public class Main {
 	            for (int j = 0; j < (amount); j++) {//Hay que arreglar que se crean demasiados bichos
 	                simulator.add_animal(inputJSON);
 	            }
-	            
 	        }
 
 	        // Create the controller instance and run the simulation
