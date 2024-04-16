@@ -118,7 +118,7 @@ public class ControlPanel extends JPanel {
 		_stopButton = new JButton();
 		_stopButton.setToolTipText("Stop Simulation");
 		_stopButton.setIcon(new ImageIcon("resources/icons/stop.png"));
-		_stopButton.setEnabled(false);
+		_stopButton.setEnabled(true);
 		_stopButton.addActionListener(this::stopSimulation);
 		_toolBar.add(_stopButton);
 

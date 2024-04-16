@@ -68,7 +68,9 @@ public class StatusBar extends JPanel implements EcoSysObserver{
 	@Override
 	public void onRegister(double time, MapInfo map, List<AnimalInfo> animals) {
 		// TODO Auto-generated method stub
-		
+		updateTime(time);
+		updateAnimalCount(animals.size());
+		updateDimensions(map.get_width(), map.get_height(), map.get_rows(), map.get_cols());
 	}
 
 	@Override

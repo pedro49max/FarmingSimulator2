@@ -143,7 +143,7 @@ public class MapViewer extends AbstractMapViewer {
     private void drawObjects(Graphics2D g, Collection<AnimalInfo> animals, Double time) {
         // Reset species info counts
         _kindsInfo.values().forEach(info -> info._count = 0);
-
+        
         for (AnimalInfo a : animals) {
             if (!visible(a)) continue;
             
@@ -178,6 +178,12 @@ public class MapViewer extends AbstractMapViewer {
     private void drawTimeInfo(Graphics2D g, double time) {
         g.setColor(Color.BLACK);
         String timeText = String.format("Time: %.2f", time);
+        g.drawString(timeText, 10, _height - 10);
+    }
+    
+    private void drawStateInfo(Graphics2D g, State s) {
+        g.setColor(Color.RED);
+        String timeText = String.format("State: %.2f", s);
         g.drawString(timeText, 10, _height - 10);
     }
 
