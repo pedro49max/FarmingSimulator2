@@ -265,21 +265,10 @@ public class Main {
 	        for (int i = 0; i < animalsArray.length()-i - 2; i++) {
 	            JSONObject animalSpec = animalsArray.getJSONObject(i);
 	            int amount = animalSpec.getInt("amount");
-	            JSONObject animalData = animalSpec.getJSONObject("spec");
-	            String animalType = animalData.getString("type");
 
 	            // Create animals based on the type and amount specified
 	            for (int j = 0; j < (amount); j++) {//Hay que arreglar que se crean demasiados bichos
-	                switch (animalType) {
-	                    case "sheep":
-	                        simulator.add_animal(animalData);
-	                        break;
-	                    case "wolf":
-	                        simulator.add_animal(animalData);
-	                        break;
-	                    default:
-	                        throw new IllegalArgumentException("Invalid animal type: " + animalType);
-	                }
+	            	simulator.add_animal(inputJSON);
 	            }
 	            
 	        }
@@ -324,8 +313,6 @@ public class Main {
 	        for (int i = 0; i < animalsArray.length()-i - 2; i++) {
 	            JSONObject animalSpec = animalsArray.getJSONObject(i);
 	            int amount = animalSpec.getInt("amount");
-	            JSONObject animalData = animalSpec.getJSONObject("spec");
-	            String animalType = animalData.getString("type");
 
 	            // Create animals based on the type and amount specified
 	            for (int j = 0; j < (amount); j++) {//Hay que arreglar que se crean demasiados bichos
