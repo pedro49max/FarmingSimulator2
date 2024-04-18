@@ -78,9 +78,12 @@ public class MapViewer extends AbstractMapViewer {
     private void cycleState() {
         if (_currState == null) {
             _currState = State.values()[0];
-        } else {
-            int nextStateIndex = (_currState.ordinal() + 1) % State.values().length;
-            _currState = State.values()[nextStateIndex];
+        } else {        	
+            int nextStateIndex = (_currState.ordinal() + 1);
+            if(State.values().length == nextStateIndex)
+            	_currState = null;
+            else
+                _currState = State.values()[nextStateIndex];
         }
     }
 
@@ -168,12 +171,12 @@ public class MapViewer extends AbstractMapViewer {
     }
 
     private void drawSpeciesInfo(Graphics2D g) {
-        int y = 60;
+        int y = _height - 30;
         for (Entry<String, SpeciesInfo> entry : _kindsInfo.entrySet()) {
             g.setColor(entry.getValue()._color);
             String text = entry.getKey() + ": " + entry.getValue()._count;
             g.drawString(text, 10, y);
-            y += 20;
+            y -= 20;
         }
     }
 
@@ -186,7 +189,7 @@ public class MapViewer extends AbstractMapViewer {
     private void drawStateInfo(Graphics2D g, State s) {
         g.setColor(Color.RED);
         String timeText = "State: " +  s.toString();
-        g.drawString(timeText, 10, _height - 37);
+        g.drawString(timeText, 10, _height - 70);
     }
 
     @Override
