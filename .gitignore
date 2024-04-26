@@ -4,3 +4,6 @@
 .classpath
 .metadata
 bin/
+*.class
+/bin/simulator/model
+/bin
