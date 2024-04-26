@@ -73,7 +73,10 @@ public class RegionManager implements AnimalMapView{
 		Region tmp = getRegionAtPosition(pos);
 		if(tmp!=null) {
 			unregister_animal(a,tmp);
-		}else a._state = State.DEAD;//animal out of the map
+		}//else a._state = State.DEAD;//animal out of the map
+		else {
+			this.update_animal_region(a);
+		}
 	}
 	
 	void unregister_animal(Animal a, Region r) {

@@ -1,6 +1,7 @@
 package simulator.model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import org.json.JSONObject;
 import simulator.factories.Factory;
@@ -69,18 +70,20 @@ public class Simulator implements JSONable, Observable<EcoSysObserver>{
 	}
 	public void advance(double dt) {
 		this._time += dt;
-		for(int i = 0; i < this._animals.size(); i++) {
-			Animal animal = _animals.get(i);
-			if(animal.get_state() == State.DEAD) {
-				this._animals.remove(animal);
-				this._region_mngr.unregister_animal(animal);
-				i--;
+
+		List<Animal> toKeep = new ArrayList<>();
+		for (Animal a: _animals) {
+			if (a.get_state() != State.DEAD) {
+				toKeep.add(a);
+				a.update(dt);
+				_region_mngr.update_animal_region(a);
 			}
 			else {
-				animal.update(dt);
-				this._region_mngr.update_animal_region(animal);
-			}			
+				_region_mngr.unregister_animal(a);
+			}
 		}
+		_animals = toKeep;
+		
 		this._region_mngr.update_all_regions(dt);
 		for(int i = 0; i < this._animals.size(); i++) {
 			Animal animal = _animals.get(i);
@@ -90,6 +93,8 @@ public class Simulator implements JSONable, Observable<EcoSysObserver>{
 				this.add_animal(baby);
 			}						
 		}
+		
+		
 		List<AnimalInfo> animals = new ArrayList<>(_animals);
 		for (EcoSysObserver observer : _observers) {
 			observer.onAdvanced(this._time, this._region_mngr, animals, dt);

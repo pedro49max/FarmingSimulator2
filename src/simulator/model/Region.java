@@ -18,12 +18,17 @@ public abstract class Region implements Entity, FoodSupplier, RegionInfo{
 		int i = 0;
 		boolean found = false;
 		while(!found && i < _animals.size()) {
-			if(_animals.get(i).equals(a))
+			if(_animals.get(i).equals(a)) {
 				found = true;
+				//System.out.print("Removed from region" + a.get_genetic_code());
+			}
 			else
 				i++;
 		}
-		_animals.remove(a);
+		if (found) {
+			//System.out.print("Removed from region " + a.get_genetic_code() + "\n");
+			_animals.remove(a);
+		}
 	}
 	final List<Animal> getAnimals(){
 		final List<Animal> animalss;
@@ -37,7 +42,8 @@ public abstract class Region implements Entity, FoodSupplier, RegionInfo{
 
         // Add animals to the JSON array
         for (Animal animal : _animals) {
-            animalArray.put(animal.as_JSON());
+        	//if (animal.get_state() == State.DEAD)
+        		animalArray.put(animal.as_JSON());
         }
 
         // Add the JSON array of animals to the JSON object

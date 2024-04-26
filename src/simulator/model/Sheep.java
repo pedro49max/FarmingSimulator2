@@ -15,7 +15,7 @@ public class Sheep extends Animal{
 		_danger_strategy = danger_strategy;
 	}
 	protected Sheep(Sheep p1, Animal p2) {
-		super(p1, p2);
+		super(p1, p2);  
 		_danger_strategy = p1._danger_strategy;
 		_danger_source = null;
 	}

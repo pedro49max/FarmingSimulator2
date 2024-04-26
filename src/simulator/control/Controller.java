@@ -54,7 +54,6 @@ public class Controller {
 	        this._sim.advance(dt);
 	        if (sv) view.update(to_animals_info(this._sim.get_animals()), this._sim.get_time(), dt);
 	    }
-
 	    // Store the final state
 	    JSONObject final_state = this._sim.as_JSON();
 
