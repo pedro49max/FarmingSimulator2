@@ -7,3 +7,5 @@ bin/
 *.class
 /bin/simulator/model
 /bin
+bin/simulator/model/Sheep.class
+bin/simulator/model/Simulator.class

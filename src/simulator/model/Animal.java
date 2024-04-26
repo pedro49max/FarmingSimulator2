@@ -29,7 +29,7 @@ public abstract class Animal implements Entity, AnimalInfo{
 		this._speed = Utils.get_randomized_parameter(init__speed, 0.1);
 		this._mate_strategy = _mate_strategy;
 		this._pos = _pos;
-		this._state = _state.NORMAL;
+		this._state = State.NORMAL;
 		this._energy = 100.0;
 		this._desire = 0.0;
 		this._dest = null;
@@ -50,7 +50,7 @@ public abstract class Animal implements Entity, AnimalInfo{
 			this._pos = p1.get_position().plus(Vector2D.get_random_vector(-1,1).scale(60.0*(Utils._rand.nextGaussian()+1)));
 			//System.out.println("_baby animal out of the map");
 		}
-		this._state = _state.NORMAL;
+		this._state = State.NORMAL;
 		this._energy = (p1.get_energy() + p2.get_energy())/2;
 		this._desire = 0.0;
 		this._dest = null;
@@ -70,7 +70,7 @@ public abstract class Animal implements Entity, AnimalInfo{
 	}
 	Animal deliver_baby() {
 		Animal _babyx;
-		if(this._diet == _diet.CARNIVORE)
+		if(this._diet == Diet.CARNIVORE)
 			_babyx = new Wolf(this._baby._mate_strategy, this._baby.getSecondStrategy(), this._baby.get_position());
 		else
 			_babyx = new Sheep(this._baby._mate_strategy, this._baby.getSecondStrategy(), this._baby.get_position());

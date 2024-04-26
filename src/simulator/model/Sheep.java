@@ -21,9 +21,9 @@ public class Sheep extends Animal{
 	}
 	public void update(double dt) {
 		//System.out.println(_state.toString());//debbuging
-		if(_state == _state.DEAD)
+		if(_state == State.DEAD)
 			return;
-		else if(_state == _state.NORMAL) {
+		else if(_state == State.NORMAL) {
 			if(_pos.distanceTo(_dest) < 8)
 				_dest = Vector2D.get_random_vectorXY(0, _region_mngr.get_width()-1, 0, _region_mngr.get_height()-1);
 			move(_speed*dt*Math.exp((_energy - 100.0)*0.007));
@@ -39,19 +39,19 @@ public class Sheep extends Animal{
 			else if(_desire > 100)
 				_desire = 100;
 			if(_danger_source == null) {			
-				Predicate<Animal> filter = animal -> animal.get_diet().equals(Diet.CARNIVORE) && (!(animal.get_state() == _state.DEAD));
+				Predicate<Animal> filter = animal -> animal.get_diet().equals(Diet.CARNIVORE) && (!(animal.get_state() == State.DEAD));
 				List<Animal> animals = _region_mngr.get_animals_in_range(this, filter);
 				_danger_source = _danger_strategy.select(this, animals);
 			}
 			if(_danger_source != null) {
-				_state = _state.DANGER;
+				_state = State.DANGER;
 			}
 			else if(_danger_source == null&& _desire > 65)
-				_state = _state.MATE;
+				_state = State.MATE;
 				
 		}
-		else if(_state == _state.DANGER) {
-			if(_danger_source != null && _danger_source.get_state() == _state.DEAD)
+		else if(_state == State.DANGER) {
+			if(_danger_source != null && _danger_source.get_state() == State.DEAD)
 				_danger_source = null;
 			if(_danger_source == null) {
 				if(_pos.dot(_dest) < 8)
@@ -86,22 +86,22 @@ public class Sheep extends Animal{
 			}
 			//Changing _state
 			if(_danger_source == null || _pos.distanceTo(_danger_source.get_position()) > _sight_range) {
-				Predicate<Animal> filter = animal -> animal.get_diet().equals(Diet.CARNIVORE) && (!(animal.get_state() == _state.DEAD));
+				Predicate<Animal> filter = animal -> animal.get_diet().equals(Diet.CARNIVORE) && (!(animal.get_state() == State.DEAD));
 				List<Animal> animals = _region_mngr.get_animals_in_range(this, filter);
 				_danger_source = _danger_strategy.select(this, animals);
 				if(_danger_source == null) {
 					if(_desire < 65)
-						_state = _state.NORMAL;
+						_state = State.NORMAL;
 					else
-						_state = _state.MATE;
+						_state = State.MATE;
 				}				
 			}
 		}
-		else if(_state == _state.MATE) {
-			if(_mate_target != null && (_mate_target.get_state() == _state.DEAD || _pos.dot(_mate_target._pos) > _sight_range))
+		else if(_state == State.MATE) {
+			if(_mate_target != null && (_mate_target.get_state() == State.DEAD || _pos.dot(_mate_target._pos) > _sight_range))
 				_mate_target = null;
 			if(_mate_target == null) {
-				Predicate<Animal> filter = animal -> animal.get_diet().equals(Diet.HERBIVORE) && (!(animal.get_state() == _state.DEAD));
+				Predicate<Animal> filter = animal -> animal.get_diet().equals(Diet.HERBIVORE) && (!(animal.get_state() == State.DEAD));
 				List<Animal> animals = _region_mngr.get_animals_in_range(this, filter);
 				_mate_target = _mate_strategy.select(this, animals);
 			}
@@ -146,27 +146,27 @@ public class Sheep extends Animal{
 			}
 			//Change of _state
 			if(_danger_source == null) {
-				Predicate<Animal> filter = animal -> animal.get_diet().equals(Diet.CARNIVORE) && (!(animal.get_state() == _state.DEAD));
+				Predicate<Animal> filter = animal -> animal.get_diet().equals(Diet.CARNIVORE) && (!(animal.get_state() == State.DEAD));
 				List<Animal> animals = _region_mngr.get_animals_in_range(this, filter);
 				_danger_source = _danger_strategy.select(this, animals);
 			}
 			if(_danger_source != null)
-				_state = _state.DANGER;
+				_state = State.DANGER;
 			else if(_danger_source == null && _desire < 65)
-				_state = _state.NORMAL;
+				_state = State.NORMAL;
 		}
 		if(_pos.getX() >= _region_mngr.get_width()) {
 			_pos = new Vector2D(_region_mngr.get_width() - 1, _pos.getY());
-			_state = _state.NORMAL;
+			_state = State.NORMAL;
 		}
 		if(_pos.getY() >= _region_mngr.get_width()) {
 			_pos = new Vector2D(_pos.getX(), _region_mngr.get_height() - 1);
-			_state = _state.NORMAL;
+			_state = State.NORMAL;
 		}
 		if(_energy == 0.0 || _age > 8.0) {
-			_state = _state.DEAD;
+			_state = State.DEAD;
 		}
-		if(_state != _state.DEAD) {
+		if(_state != State.DEAD) {
 			_energy += _region_mngr.get_food(this, dt);
 			if(_energy < 0)
 				_energy = 0;

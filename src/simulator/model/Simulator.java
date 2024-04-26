@@ -1,7 +1,6 @@
 package simulator.model;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import org.json.JSONObject;
 import simulator.factories.Factory;
