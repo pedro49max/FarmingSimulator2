@@ -81,8 +81,8 @@ public class Wolf extends Animal{
 				else if(_desire > 100)
 					_desire = 100;
 				if(_pos.distanceTo(_hunt_target.get_position()) < 8) {
-					if(_hunt_target._state == State.DEAD)
-						System.out.println("lobo come oveja muerta");
+					/*if(_hunt_target._state == State.DEAD)
+						System.out.println("lobo come oveja muerta");*/
 					_hunt_target._state = State.DEAD;
 					_hunt_target = null;
 					_energy += 50;
