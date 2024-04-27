@@ -42,10 +42,12 @@ public class RegionManager implements AnimalMapView{
 		List<Animal> animals = r.getAnimals();
 		Region newRegion = r;
 		//this.animal_region.remove(r);
+		List<Animal> as = new ArrayList<>();
+		r.setAnimals(as);  
 		
 		for(int i = 0; i < animals.size(); i++) {
 			newRegion.add_animal(animals.get(i));
-			this.animal_region.put(animals.get(i), newRegion);
+			//animal_region.put(animals.get(i), newRegion);
 		}
 		regions[row][col] = newRegion;	
 	}
@@ -85,42 +87,33 @@ public class RegionManager implements AnimalMapView{
 		this.animal_region.remove(a, r);
 	}
 	void update_animal_region(Animal a) {
-		int nCol = 0;
-		int nRow = 0;
-		int i = 0;
-		boolean found = false;
-		while(!found && nRow < this.rows) {
-			while(!found && nCol < this.rows) {
-				List<Animal> animals = regions[nRow][nCol].getAnimals();
-				while(!found && i < animals.size()) {
-					if(animals.get(i) == a)
-						found = true;
-					else
-						i++;
-				}
-				if(!found) {
-					i = 0;
-					nCol++;
-				}
-			}
-			if(!found) {
-				nCol = 0;
-				nRow++;
-			}
-		}
-		if(!found)
-			this.register_animal(a);
-		else {
-			Vector2D pos= a.get_position();
-			int newCol =  Math.max(0, Math.min(colums -1, (int) (pos.getX() / this.regWidth)));
-			int newRow = Math.max(0, Math.min(rows -1, (int) (pos.getY() / this.regHeight)));
-			if(nCol != newCol || nRow != newRow) {
-				this.unregister_animal(a, regions[newRow][newCol]);
-				this.register_animal(a);
-			}
-			
-		}
+	    // Get the current position of the animal
+	    Vector2D pos = a.get_position();
+	    
+	    // Calculate the new row and column indices based on the animal's position
+	    int newCol = Math.max(0, Math.min(colums - 1, (int) (pos.getX() / this.regWidth)));
+	    int newRow = Math.max(0, Math.min(rows - 1, (int) (pos.getY() / this.regHeight)));
+
+	    // Get the current region of the animal
+	    Region currentRegion = animal_region.get(a);
+
+	    // Get the region at the new position
+	    Region newRegion = regions[newRow][newCol];
+
+	    // If the animal is already in the new region, no need to update
+	    if (currentRegion == newRegion) {
+	        return;
+	    }
+
+	    // Unregister the animal from the current region
+	    if (currentRegion != null) {
+	        unregister_animal(a, currentRegion);
+	    }
+
+	    // Register the animal in the new region
+	    register_animal(a);
 	}
+
 	public double get_food(Animal a, double dt) {
 		double food = 0;
 		Vector2D pos= a.get_position();
@@ -130,6 +123,7 @@ public class RegionManager implements AnimalMapView{
 			food = tmp.get_food(a, dt);
 		return food;
 	}
+	
 	void update_all_regions(double dt) {
 		for(int r = 0; r < this.rows; r++) 
 			for(int c = 0; c < this.get_cols(); c++) {
@@ -210,6 +204,7 @@ public class RegionManager implements AnimalMapView{
 		while(regions.hasNext()) {
 			RegionData region = regions.next();
 			if(position.getX()>= region.getCol() * this.regWidth && position.getX() <(region.getCol() + 1) * this.regWidth && position.getY() >= region.getRow() * regHeight && position.getY() < (region.getRow() + 1) * regHeight) {
+				//System.out.println("YES");
 				return this.regions[region.getRow()][region.getCol()];
 			}
 		}

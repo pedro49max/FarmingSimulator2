@@ -81,7 +81,15 @@ public class Simulator implements JSONable, Observable<EcoSysObserver>{
 				_region_mngr.unregister_animal(a);
 			}
 		}
-		_animals = toKeep;
+		_animals = new ArrayList<>();
+		//int counter = 0;
+		for (Animal k : toKeep) {
+			if (k.get_state() != State.DEAD) {
+				//System.out.println(_animals.size());
+				add_animal(k);
+				//counter++;
+			}
+		}
 		
 		this._region_mngr.update_all_regions(dt);
 		List<Animal> pregnant = new ArrayList<>();
@@ -98,6 +106,8 @@ public class Simulator implements JSONable, Observable<EcoSysObserver>{
 		for (Animal p : pregnant) {
 			add_animal(p);
 		}
+		
+		//System.out.println(_animals.size());
 		
 		
 		List<AnimalInfo> animals = new ArrayList<>(_animals);
