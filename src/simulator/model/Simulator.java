@@ -84,13 +84,19 @@ public class Simulator implements JSONable, Observable<EcoSysObserver>{
 		_animals = toKeep;
 		
 		this._region_mngr.update_all_regions(dt);
+		List<Animal> pregnant = new ArrayList<>();
 		for(int i = 0; i < this._animals.size(); i++) {
 			Animal animal = _animals.get(i);
 			Animal baby;
 			if(animal.is_pregnant()) {
-				baby = animal.deliver_baby();
-				this.add_animal(baby);
+				baby = animal.deliver_baby(); 
+				pregnant.add(baby);
+				//this.add_animal(baby);
 			}						
+		}
+		
+		for (Animal p : pregnant) {
+			add_animal(p);
 		}
 		
 		
@@ -99,6 +105,7 @@ public class Simulator implements JSONable, Observable<EcoSysObserver>{
 			observer.onAdvanced(this._time, this._region_mngr, animals, dt);
 		}
 	}
+	
 	@Override
 	public JSONObject as_JSON() {
 		 JSONObject json = new JSONObject();

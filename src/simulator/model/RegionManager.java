@@ -41,7 +41,8 @@ public class RegionManager implements AnimalMapView{
 	void set_region(int row, int col, Region r) {
 		List<Animal> animals = r.getAnimals();
 		Region newRegion = r;
-		this.animal_region.remove(r);
+		//this.animal_region.remove(r);
+		
 		for(int i = 0; i < animals.size(); i++) {
 			newRegion.add_animal(animals.get(i));
 			this.animal_region.put(animals.get(i), newRegion);

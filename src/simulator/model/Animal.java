@@ -36,7 +36,7 @@ public abstract class Animal implements Entity, AnimalInfo{
 		this._mate_target = null;
 		this._baby = null;
 		this._region_mngr = null;
-		this._age= 0;//apparently now everything starts at 0 age
+		this._age = 0;//apparently now everything starts at 0 age
 	}
 	
 	protected Animal(Animal p1, Animal p2) {
