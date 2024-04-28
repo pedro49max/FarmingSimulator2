@@ -23,6 +23,7 @@ import simulator.model.AnimalInfo;
 import simulator.model.MapInfo;
 import simulator.model.Simulator;
 import simulator.view.SimpleObjectViewer.ObjInfo;
+import resources.icons.*;
 
 public class ControlPanel extends JPanel {
 	private Controller _ctrl;
@@ -58,7 +59,7 @@ public class ControlPanel extends JPanel {
 		_toolBar.add(Box.createGlue());
 		_fileButton = new JButton();
 		_fileButton.setToolTipText("Load an input file");
-		_fileButton.setIcon(new ImageIcon("resources/icons/open.png"));
+		_fileButton.setIcon(new ImageIcon(ICONS.class.getResource("open.png")));
 		_fileButton.addActionListener((ActionListener) new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -90,7 +91,7 @@ public class ControlPanel extends JPanel {
 		_toolBar.addSeparator();
 		_mapButton = new JButton();
 		_mapButton.setToolTipText("Map Viewer");
-		_mapButton.setIcon(new ImageIcon("resources/icons/viewer.png"));
+		_mapButton.setIcon(new ImageIcon(ICONS.class.getResource("viewer.png")));
 		_mapButton.addActionListener(this::map_view);
 		_toolBar.add(_mapButton);
 
@@ -99,7 +100,7 @@ public class ControlPanel extends JPanel {
 		_toolBar.addSeparator();
 		_regButton = new JButton();
 		_regButton.setToolTipText("Change Regions");
-		_regButton.setIcon(new ImageIcon("resources/icons/regions.png"));
+		_regButton.setIcon(new ImageIcon(ICONS.class.getResource("regions.png")));
 		_regButton.addActionListener(this::openRegions);
 		_toolBar.add(_regButton);
 
@@ -108,7 +109,7 @@ public class ControlPanel extends JPanel {
 		_toolBar.addSeparator();
 		_runButton = new JButton();
 		_runButton.setToolTipText("Run Simulation");
-		_runButton.setIcon(new ImageIcon("resources/icons/run.png"));
+		_runButton.setIcon(new ImageIcon(ICONS.class.getResource("run.png")));
 		_runButton.addActionListener(this::runSimulation);
 		_toolBar.add(_runButton);
 
@@ -117,7 +118,7 @@ public class ControlPanel extends JPanel {
 		// Stop Button
 		_stopButton = new JButton();
 		_stopButton.setToolTipText("Stop Simulation");
-		_stopButton.setIcon(new ImageIcon("resources/icons/stop.png"));
+		_stopButton.setIcon(new ImageIcon(ICONS.class.getResource("stop.png")));
 		_stopButton.setEnabled(true);
 		_stopButton.addActionListener(this::stopSimulation);
 		_toolBar.add(_stopButton);
@@ -142,7 +143,7 @@ public class ControlPanel extends JPanel {
 		_toolBar.addSeparator();
 		_quitButton = new JButton();
 		_quitButton.setToolTipText("Quit");
-		_quitButton.setIcon(new ImageIcon("resources/icons/exit.png"));
+		_quitButton.setIcon(new ImageIcon(ICONS.class.getResource("exit.png")));
 		_quitButton.addActionListener((e) -> ViewUtils.quit(this));
 		_toolBar.add(_quitButton);
 	}
