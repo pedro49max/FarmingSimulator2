@@ -43,6 +43,7 @@ public class Simulator implements JSONable, Observable<EcoSysObserver>{
       	}
 	}
 	private void add_animal(Animal a) {
+		//System.out.println("T");
 		this._animals.add(a);
 		this._region_mngr.register_animal(a);
 		//Notify all observers
@@ -77,12 +78,23 @@ public class Simulator implements JSONable, Observable<EcoSysObserver>{
 				a.update(dt);
 				_region_mngr.update_animal_region(a);
 			}
-			else {
-				_region_mngr.unregister_animal(a);
-			}
+			_region_mngr.unregister_animal(a);
 		}
-		_animals = new ArrayList<>();
 		//int counter = 0;
+		
+		
+		for(int i = 0; i < this._animals.size(); i++) {
+			Animal animal = _animals.get(i);
+			Animal baby;
+			if(animal.is_pregnant()) {
+				baby = animal.deliver_baby(); 
+				toKeep.add(baby);
+				//this.add_animal(baby);
+			}						
+		}
+		
+		_animals = new ArrayList<>();
+		
 		for (Animal k : toKeep) {
 			if (k.get_state() != State.DEAD) {
 				//System.out.println(_animals.size());
@@ -92,23 +104,7 @@ public class Simulator implements JSONable, Observable<EcoSysObserver>{
 		}
 		
 		this._region_mngr.update_all_regions(dt);
-		List<Animal> pregnant = new ArrayList<>();
-		for(int i = 0; i < this._animals.size(); i++) {
-			Animal animal = _animals.get(i);
-			Animal baby;
-			if(animal.is_pregnant()) {
-				baby = animal.deliver_baby(); 
-				pregnant.add(baby);
-				//this.add_animal(baby);
-			}						
-		}
-		
-		for (Animal p : pregnant) {
-			add_animal(p);
-		}
-		
 		//System.out.println(_animals.size());
-		
 		
 		List<AnimalInfo> animals = new ArrayList<>(_animals);
 		for (EcoSysObserver observer : _observers) {

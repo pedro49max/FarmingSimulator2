@@ -227,14 +227,6 @@ public class ControlPanel extends JPanel {
 		_ctrl.load_data(ob);
 	}
 
-	private List<ObjInfo> to_animals_info(List<? extends AnimalInfo> animals) {
-		List<ObjInfo> ol = new ArrayList<>(animals.size());
-		for (AnimalInfo a : animals)
-			ol.add(new ObjInfo(a.get_genetic_code(), (int) a.get_position().getX(), (int) a.get_position().getY(),
-					(int) Math.round(a.get_age()) + 2));
-		return ol;
-	}
-
 	private void map_view(ActionEvent e) {
 	    // Instantiate a new MapWindow
 	    Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(this);

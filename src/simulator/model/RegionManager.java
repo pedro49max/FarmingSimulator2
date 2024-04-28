@@ -39,16 +39,20 @@ public class RegionManager implements AnimalMapView{
 		animal_region = new HashMap<>();
 	}
 	void set_region(int row, int col, Region r) {
-		List<Animal> animals = r.getAnimals();
+		
+		Region prev = regions[row][col];
+		List<Animal> animals = prev.getAnimals();
 		Region newRegion = r;
 		//this.animal_region.remove(r);
 		List<Animal> as = new ArrayList<>();
-		r.setAnimals(as);  
+		 
+		//System.out.println(animals.size());
 		
 		for(int i = 0; i < animals.size(); i++) {
-			newRegion.add_animal(animals.get(i));
-			//animal_region.put(animals.get(i), newRegion);
+			as.add(animals.get(i));
+			animal_region.put(animals.get(i), newRegion);
 		}
+		newRegion.setAnimals(as); 
 		regions[row][col] = newRegion;	
 	}
 	
@@ -74,12 +78,12 @@ public class RegionManager implements AnimalMapView{
 	void unregister_animal(Animal a) {
 		Vector2D pos= a.get_position();
 		Region tmp = getRegionAtPosition(pos);
+		//System.out.println("not");
 		if(tmp!=null) {
+			//System.out.println("removed");
 			unregister_animal(a,tmp);
-		}//else a._state = State.DEAD;//animal out of the map
-		else {
-			this.update_animal_region(a);
-		}
+		}else a._state = State.DEAD;//animal out of the map
+		
 	}
 	
 	void unregister_animal(Animal a, Region r) {
@@ -128,6 +132,7 @@ public class RegionManager implements AnimalMapView{
 		for(int r = 0; r < this.rows; r++) 
 			for(int c = 0; c < this.get_cols(); c++) {
 				regions[r][c].update(dt);
+				//set_region(r,c,regions[r][c]);
 				//System.out.println(r + " " + c + " " + regions[r][c] + " " + regions[r][c].getAnimalsInfo().size());
 			}
 	}

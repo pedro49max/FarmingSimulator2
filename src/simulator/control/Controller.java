@@ -105,7 +105,7 @@ public class Controller {
                 int cf = regionObj.getJSONArray("col").getInt(0);
                 int ct = regionObj.getJSONArray("col").getInt(1);
                 JSONObject spec = regionObj.getJSONObject("spec");
-                
+                //System.out.println(rf + " " + rt + " " + cf + " " + ct);
                 for (int row = rf; row <= rt; row++) 
                     for (int col = cf; col <= ct; col++) 
                         this._sim.set_region(row, col, spec);               

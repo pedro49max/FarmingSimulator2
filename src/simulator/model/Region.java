@@ -43,6 +43,7 @@ public abstract class Region implements Entity, FoodSupplier, RegionInfo{
 	}
 	
 	public abstract String toString();
+	
 	public JSONObject as_JSON() {//returns a JSON structure as follows where ai is what is returned by as_JSON() of the corresponding animal:
 		JSONObject json = new JSONObject();
         JSONArray animalArray = new JSONArray();
