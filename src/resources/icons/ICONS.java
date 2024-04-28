@@ -1,5 +1,5 @@
-package icons;
+package resources.icons;
 
 public class ICONS {
-
+	
 }
