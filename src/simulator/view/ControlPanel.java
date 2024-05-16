@@ -132,6 +132,9 @@ public class ControlPanel extends JPanel {
 		_toolBar.addSeparator();
 		_toolBar.add(new JLabel("Delta Time: "));
 		_deltaTimeField = new JTextField(String.valueOf(Main._deltaTime), 5);
+		_deltaTimeField.setPreferredSize(getPreferredSize());
+		_deltaTimeField.setMaximumSize(getPreferredSize());
+		_deltaTimeField.setMinimumSize(getPreferredSize());
 		_toolBar.add(_deltaTimeField);
 
 		// Add separator
@@ -145,6 +148,7 @@ public class ControlPanel extends JPanel {
 		_quitButton.setIcon(new ImageIcon("resources/icons/exit.png"));
 		_quitButton.addActionListener((e) -> ViewUtils.quit(this));
 		_toolBar.add(_quitButton);
+		
 	}
 
 	private static JSONObject load_JSON_file(InputStream in) {

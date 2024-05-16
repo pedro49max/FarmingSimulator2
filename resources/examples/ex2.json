@@ -4,13 +4,13 @@
   "cols" : 20,
   "rows" : 15,
   "animals" : [ {
-    "amount" : 100,
+    "amount" : 50,
     "spec" : {
       "type" : "sheep",
       "data" : { }
     }
   }, {
-    "amount" : 30,
+    "amount" : 200,
     "spec" : {
       "type" : "wolf",
       "data" : { }

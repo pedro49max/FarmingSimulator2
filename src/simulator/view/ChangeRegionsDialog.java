@@ -2,6 +2,8 @@ package simulator.view;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+
 import java.awt.*;
 import java.util.Iterator;
 import java.util.List;
@@ -66,7 +68,7 @@ public class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 				// Add additional rows for "food" and "factor" for "dynamic" region type
 				String regionType = regionComboBox.getSelectedItem().toString();
 				for (JSONObject o : _regionsInfo) {
-					//System.out.println(o.toString());
+					// System.out.println(o.toString());
 					String s = o.get("type").toString();
 					System.out.println(regionType);
 					if (s.equals(regionType)) {
@@ -76,11 +78,11 @@ public class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 							String value = data.getString(key);
 							_dataTableModel.addRow(new Object[] { key, "", value });
 						}
-						//break;
-					} 
-						
+						// break;
 					}
-				
+
+				}
+
 			}
 		});
 
@@ -96,7 +98,11 @@ public class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 			}
 		};
 		_dataTableModel.setColumnIdentifiers(_headers);
+		
 		JTable dataTable = new JTable(_dataTableModel);
+		
+		TableColumn column = dataTable.getColumnModel().getColumn(2);
+        column.setPreferredWidth(360);
 
 		JScrollPane tableScrollPane = new JScrollPane(dataTable);
 		mainPanel.add(tableScrollPane);
@@ -129,10 +135,14 @@ public class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 				JSONObject regionData = new JSONObject();
 				regionData.put("row", new JSONArray().put(fromRow).put(toRow));
 				regionData.put("col", new JSONArray().put(fromCol).put(toCol));
-				regionData.put("spec", new JSONObject().put("type", regionType).put("data",
-						constructRegionData(_dataTableModel))); // Construct this
-																									// method to get
-																									// region data
+				regionData.put("spec",
+						new JSONObject().put("type", regionType).put("data", constructRegionData(_dataTableModel))); // Construct
+																														// this
+																														// method
+																														// to
+																														// get
+																														// region
+																														// data
 				JSONObject regionsJSON = new JSONObject();
 				regionsJSON.put("regions", new JSONArray().put(regionData));
 				_ctrl.set_regions(regionsJSON);
@@ -169,29 +179,28 @@ public class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 		setVisible(false);
 	}
 
-	private JSONObject constructRegionData(DefaultTableModel t) {		
-		
+	private JSONObject constructRegionData(DefaultTableModel t) {
+
 		JSONObject j = new JSONObject();
-		
+
 		for (int k = 0; k < t.getRowCount(); k++) {
 			Object f = t.getValueAt(k, 1);
 			try {
 				j.put(t.getValueAt(k, 0).toString(), f);
-				//System.out.println(t.getValueAt(k, 0).toString() + " " + f.toString());
-			}
-			catch (NumberFormatException e) {
+				// System.out.println(t.getValueAt(k, 0).toString() + " " + f.toString());
+			} catch (NumberFormatException e) {
 				ViewUtils.showErrorMsg("Error parsing values: " + e.getMessage());
 				return null; // or handle the error as needed
 			}
-			
+
 		}
-		
+
 		if (j.isEmpty()) {
 			j.put("{}", "");
 		}
-		
+
 		return j;
-		
+
 	}
 
 	private void removeAllRows(DefaultTableModel t) {
@@ -228,19 +237,19 @@ public class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 	public void onReset(double time, MapInfo map, List<AnimalInfo> animals) {
 		// TODO Auto-generated method stub
 		removeAllRows(_dataTableModel);
-		
+
 	}
 
 	@Override
 	public void onAnimalAdded(double time, MapInfo map, List<AnimalInfo> animals, AnimalInfo a) {
 		// TODO Auto-generated method stub
-		//Not used
+		// Not used
 	}
 
 	@Override
 	public void onRegionSet(int row, int col, MapInfo map, RegionInfo r) {
 		// TODO Auto-generated method stub
-		
+
 		_dataTableModel.fireTableDataChanged();
 	}
 
