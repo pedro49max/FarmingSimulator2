@@ -97,8 +97,8 @@ public class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 			}
 		};
 		_dataTableModel.setColumnIdentifiers(_headers);
+		
 		JTable dataTable = new JTable(_dataTableModel);
-
 		JScrollPane tableScrollPane = new JScrollPane(dataTable);
 		mainPanel.add(tableScrollPane);
 
