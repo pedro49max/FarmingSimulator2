@@ -299,8 +299,7 @@ public class Main {
 	    int cols = 15; // Default number of columns
 	    int rows = 20; // Default number of rows
 	    
-	    try (InputStream is = new FileInputStream(new File(_in_file));
-	            OutputStream os = new FileOutputStream(new File(_out_file))) {
+	    try (InputStream is = new FileInputStream(new File(_in_file))) {
 	        // Load the input JSON file
 	        JSONObject inputJSON = load_JSON_file(is);
 
@@ -336,8 +335,6 @@ public class Main {
 		        MainWindow mainWindow = new MainWindow(controller);
 		        mainWindow.setVisible(true);
 		    });
-		    
-	        os.close();
 	    }
 		catch (IOException e) {
 	        System.err.println("Error opening input file: " + e.getMessage());
