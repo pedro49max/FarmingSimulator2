@@ -153,11 +153,16 @@ public class Main {
 	}
 
 	private static void parse_in_file_option(CommandLine line) throws ParseException {
-		_in_file = line.getOptionValue("i");
-		if (_mode == ExecMode.BATCH && _in_file == null) {
-			throw new ParseException("In batch mode an input configuration file is required");
-		}
+		if (line.hasOption("i")) {
+			_in_file = line.getOptionValue("i");
+			if (_mode == ExecMode.BATCH && _in_file == null) {
+				throw new ParseException("In batch mode an input configuration file is required");
+			}
+        }
+		else
+        	_in_file = "resources/examples/ex1.json";  // Default input file
 	}
+	
 	private static void parse_delta_time_option(CommandLine line) throws ParseException {
 		String t = line.getOptionValue("dt", _default_deltaTime.toString());
 		//System.out.println(t);
