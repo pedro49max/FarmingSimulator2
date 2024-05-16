@@ -235,6 +235,7 @@ public class Main {
 	    // Add your region builders here...
 	    regionBuilders.add(new DefaultRegionBuilder());
 	    regionBuilders.add(new DynamicSupplyRegionBuilder());
+	    regionBuilders.add(new DynamicRegionBuilder2());
 	    regions_factory = new BuilderBasedFactory<>(regionBuilders);
 	}
 

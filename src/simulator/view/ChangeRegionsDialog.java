@@ -68,20 +68,19 @@ public class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 				for (JSONObject o : _regionsInfo) {
 					//System.out.println(o.toString());
 					String s = o.get("type").toString();
+					System.out.println(regionType);
 					if (s.equals(regionType)) {
+						removeAllRows(_dataTableModel);
 						JSONObject data = o.getJSONObject("data");
 						for (String key : data.keySet()) {
 							String value = data.getString(key);
 							_dataTableModel.addRow(new Object[] { key, "", value });
 						}
 						//break;
-					} else {
-						if (_dataTableModel.getRowCount() != 0) {
-							removeAllRows(_dataTableModel);
-						}
+					} 
 						
 					}
-				}
+				
 			}
 		});
 
