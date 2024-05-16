@@ -17,13 +17,13 @@ import simulator.model.Region;
 import simulator.model.RegionInfo;
 import simulator.model.State;
 
-class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
+public class RegionsTable extends AbstractTableModel implements EcoSysObserver {
 	private Controller _ctrl;
 	private Diet[] _diets;
 	private int numRows, numCols;
 	private ArrayList<RegionData> _regionsA;
 
-	public RegionsTableModel(Controller ctrl) {
+	public RegionsTable(Controller ctrl) {
 		_ctrl = ctrl;
 		_regionsA = new ArrayList<RegionData>(); // Initialize as null
 		_diets = Diet.values();
