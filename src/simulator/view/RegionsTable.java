@@ -112,7 +112,7 @@ class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 	public void onRegister(double time, MapInfo map, List<AnimalInfo> animals) {
 		numCols = map.get_cols();
 		numRows = map.get_rows();
-		//updateRegionsTable(map);
+		updateRegionsTable(map);
 	}
 
 	@Override

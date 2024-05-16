@@ -1,6 +1,7 @@
 package simulator.view;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -44,6 +45,7 @@ public class ControlPanel extends JPanel {
 		_ctrl = ctrl;
 		_changeRegionsDialog = new ChangeRegionsDialog(ctrl);
 		initGUI();
+		
 	}
 
 	private void initGUI() {
@@ -126,7 +128,7 @@ public class ControlPanel extends JPanel {
 		// Steps Spinner
 		_toolBar.addSeparator();
 		_toolBar.add(new JLabel("Steps: "));
-		_stepsSpinner = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
+		_stepsSpinner = new JSpinner(new SpinnerNumberModel(10000, 1, Integer.MAX_VALUE, 1));
 		_toolBar.add(_stepsSpinner);
 
 		// Delta Time Field
