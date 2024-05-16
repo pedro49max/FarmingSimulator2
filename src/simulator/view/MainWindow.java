@@ -46,7 +46,7 @@ public class MainWindow extends JFrame{
 	    
 	    // Create the regions table.
 	    // Use setPreferredSize(new Dimension(500, 250)) to fix its size
-	    InfoTable regionsTable = new InfoTable("Regions", new RegionsTableModel(_ctrl));
+	    InfoTable regionsTable = new InfoTable("Regions", new RegionsTable(_ctrl));
 	    regionsTable.setPreferredSize(new Dimension(500, 250));
 	    contentPanel.add(regionsTable);
 	    
