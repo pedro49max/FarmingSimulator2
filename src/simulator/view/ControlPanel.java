@@ -125,7 +125,7 @@ public class ControlPanel extends JPanel {
 		// Steps Spinner
 		_toolBar.addSeparator();
 		_toolBar.add(new JLabel("Steps: "));
-		_stepsSpinner = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
+		_stepsSpinner = new JSpinner(new SpinnerNumberModel(10000, 1, Integer.MAX_VALUE, 1));
 		_toolBar.add(_stepsSpinner);
 
 		// Delta Time Field

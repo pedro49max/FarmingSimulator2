@@ -1,6 +1,7 @@
 package simulator.view;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
@@ -11,19 +12,20 @@ import simulator.model.AnimalInfo;
 import simulator.model.Diet;
 import simulator.model.EcoSysObserver;
 import simulator.model.MapInfo;
+import simulator.model.MapInfo.RegionData;
 import simulator.model.Region;
 import simulator.model.RegionInfo;
 import simulator.model.State;
 
 class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 	private Controller _ctrl;
-	private ArrayList<Region> _regions;
 	private Diet[] _diets;
 	private int numRows, numCols;
+	private ArrayList<RegionData> _regionsA;
 
-	RegionsTableModel(Controller ctrl) {
+	public RegionsTableModel(Controller ctrl) {
 		_ctrl = ctrl;
-		_regions = new ArrayList<Region>(); // Initialize as null
+		_regionsA = new ArrayList<RegionData>(); // Initialize as null
 		_diets = Diet.values();
 		_ctrl.addObserver(this);
 		//MapInfo info = ctrl.getSim().get_map_info();
@@ -33,7 +35,7 @@ class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 
 	@Override
 	public int getRowCount() {
-		return _regions != null ? _regions.size() : 0;
+		return _regionsA != null ? _regionsA.size() : 0;
 	}
 
 	@Override
@@ -91,13 +93,13 @@ class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 		case 1:
 			return rowI < numCols ? rowI : rowI % numCols;
 		case 2:
-			return _regions.get(rowI).toString();
+			return _regionsA.get(rowI).getR().toString();
 		default:
 			if (columnIndex - 3 < _diets.length) {
-				if (!_regions.isEmpty()) {
-					Region r = _regions.get(rowI);
+				if (!_regionsA.isEmpty()) {
+					RegionData r = _regionsA.get(rowI);
 				
-				return countAnimalsWithDiet(_regions.get(rowI).getAnimalsInfo(), _diets[columnIndex - 3]);
+				return countAnimalsWithDiet(r.r().getAnimalsInfo(), _diets[columnIndex - 3]);
 				}
 			}
 			else
@@ -112,13 +114,13 @@ class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 	public void onRegister(double time, MapInfo map, List<AnimalInfo> animals) {
 		numCols = map.get_cols();
 		numRows = map.get_rows();
-		//updateRegionsTable(map);
+		updateRegionsTable(map);
 	}
 
 	@Override
 	public void onReset(double time, MapInfo map, List<AnimalInfo> animals) {
-		if (!_regions.isEmpty())
-			_regions.clear();
+		if (!_regionsA.isEmpty())
+			_regionsA.clear();
 		//_ctrl.reset(map.get_cols(), map.get_rows(), map.get_width(), map.get_height());
 	}
 
@@ -145,14 +147,13 @@ class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 	}
 	
 	private void updateRegionsTable(MapInfo map) {
-		if (!_regions.isEmpty())
-			_regions.clear();
-		for (Region[] r : map.getRegions()) {
-			for (Region r2 : r) {
-				_regions.add(r2);
-				//System.out.println(r2.toString() + " " + r2.getAnimalsInfo().size());
-				fireTableDataChanged();	
-			}
+		if (!_regionsA.isEmpty())
+			_regionsA.clear();
+		Iterator<RegionData> it = map.iterator();
+		while (it.hasNext()) {
+			_regionsA.add(it.next());
+			//System.out.println(r2.toString() + " " + r2.getAnimalsInfo().size());
+			fireTableDataChanged();	
 		}
 		
 	}
