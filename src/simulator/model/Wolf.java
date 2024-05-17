@@ -40,9 +40,12 @@ public class Wolf extends Animal{
 				_desire = 100;
 			if(_energy < 50) {
 				_state = State.HUNGER;
+				this._mate_target = null;
 			}
-			else if(_desire > 65)
-				_state= State.MATE;				
+			else if(_desire > 65) {
+				_state= State.MATE;	
+				this._hunt_target = null;
+			}						
 		}
 		else if(_state == State.HUNGER) {
 			if(_hunt_target == null ||(_hunt_target != null && (_hunt_target.get_state() == State.DEAD || _pos.distanceTo(_hunt_target.get_position()) > _sight_range))) {
@@ -90,14 +93,21 @@ public class Wolf extends Animal{
 						_energy = 0;
 					else if(_energy > 100)
 						_energy = 100;
-					if(_desire < 65)
+					if(_desire < 65) {
 						_state = State.NORMAL;
-					else
+						this._mate_target= null;
+						this._hunt_target =null;
+					}
+					else {
 						_state = State.MATE;
+						this._hunt_target = null;
+					}
 				}
 			}
-			if(_energy < 50)
+			if(_energy < 50) {
 				_state = State.HUNGER;
+				this._mate_target = null;
+			}
 		}
 		else if(_state == State.MATE) {
 			if(_mate_target != null && _mate_target.get_state() == State.DEAD)
@@ -146,18 +156,27 @@ public class Wolf extends Animal{
 				else if(_desire > 100)
 					_desire = 100;
 			}
-			if(_energy < 50)
+			if(_energy < 50) {
 				_state = State.HUNGER;
-			else if(_desire < 65)
+				this._mate_target = null;
+			}
+			else if(_desire < 65) {
 				_state = State.NORMAL;
+				this._hunt_target = null;
+				this._mate_target = null;
+			}
 		}
 		if(_pos.getX() >= _region_mngr.get_width()) {
 			_pos = new Vector2D(_region_mngr.get_width() - 1, _pos.getY());
 			_state = State.NORMAL;
+			this._hunt_target = null;
+			this._mate_target = null;
 		}
 		if(_pos.getY() >= _region_mngr.get_width()) {
 			_pos = new Vector2D(_pos.getX(), _region_mngr.get_height() - 1);
 			_state = State.NORMAL;
+			this._hunt_target = null;
+			this._mate_target = null;
 		}
 		if(_energy == 0.0 || _age > 14.0)
 			_state = State.DEAD;
