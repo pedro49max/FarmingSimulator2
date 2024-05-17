@@ -132,6 +132,11 @@ public class Wolf extends Animal{
 				else if(_desire > 100)
 					_desire = 100;
 				if(_pos.distanceTo(_mate_target.get_position()) < 8) {
+					_energy -= 10;
+					if(_energy < 0)
+						_energy = 0;
+					else if(_energy > 100)
+						_energy = 100;
 					_desire = 0;
 					_mate_target._desire = 0;
 					if(_baby == null) 
@@ -180,13 +185,7 @@ public class Wolf extends Animal{
 		}
 		if(_energy == 0.0 || _age > 14.0)
 			_state = State.DEAD;
-		if(_state != State.DEAD) {
-			_energy += _region_mngr.get_food(this, dt);
-			if(_energy < 0)
-				_energy = 0;
-			else if(_energy > 100)
-				_energy = 100;
-		}
+		
 	}
 	
 	public SelectionStrategy getSecondStrategy() {

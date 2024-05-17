@@ -69,11 +69,7 @@ public abstract class Animal implements Entity, AnimalInfo{
 		
 	}
 	Animal deliver_baby() {
-		Animal _babyx;
-		if(this._diet == Diet.CARNIVORE)
-			_babyx = new Wolf(this._baby._mate_strategy, this._baby.getSecondStrategy(), this._baby.get_position());
-		else
-			_babyx = new Sheep(this._baby._mate_strategy, this._baby.getSecondStrategy(), this._baby.get_position());
+		Animal _babyx= (Animal) this._baby;
 		this._baby = null;
 		return _babyx;
 	}
